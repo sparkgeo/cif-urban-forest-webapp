@@ -18,6 +18,7 @@ Think of this template more as a list of things to consider. Feel free to change
 ## Tech Stack and Dependencies Worth Noting
 
 - dont forget to a link to the back end repo if that is a dependency
+- typescript - todo, mention weird maplibre/react-map-gl type conflicts
 
 ## General Development Process and Standards
 
