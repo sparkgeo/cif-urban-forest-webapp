@@ -8,8 +8,6 @@ const layout = {
   mapHeight: `calc(100vh - ${headerHeight})`,
 }
 
-const spacing = (factor: number) => `${0.5 * factor}rem`
-
 const typography = {
   fontStack: ['Open Sans', 'sans-serif'],
   xsmallFontSize: '1rem',
@@ -18,4 +16,4 @@ const typography = {
   largeFontSize: '2.5rem',
   xlargeFontSize: '3rem',
 }
-export const theme = { color, spacing, typography, layout }
+export const theme = { color, typography, layout }

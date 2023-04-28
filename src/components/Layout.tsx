@@ -1,5 +1,6 @@
 import { styled } from '@mui/material'
 import { theme } from '../styles/theme'
+import { themeMui } from '../styles/themeMui'
 
 interface LayoutProps {
   title: JSX.Element
@@ -13,7 +14,7 @@ const LayoutWrapper = styled('div')`
 `
 
 const Header = styled('header')`
-  padding: ${theme.spacing(1)};
+  padding: ${themeMui.spacing(1)};
   background-color: ${theme.color.primary};
   height: ${theme.layout.headerHeight};
 `

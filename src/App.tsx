@@ -4,12 +4,11 @@ import { Layout } from './components/Layout'
 import { themeMui } from './styles/themeMui'
 import { H1 } from './components/generic/typography'
 import { Map } from './components/Map'
-
-const SideBarWrapper = styled('div')``
+import { Sidebar } from './components/SidebarLeft'
 
 export function App() {
   const title = <H1>Canadian Institute of Forestry - WIP</H1>
-  const sideBar = <SideBarWrapper>sidebar placeholder</SideBarWrapper>
+  const sideBar = <Sidebar />
   const map = <Map />
 
   return (
