@@ -14,5 +14,4 @@ export const themeMui = createTheme({
       main: theme.color.secondary,
     },
   },
-  spacing: theme.spacing,
 })

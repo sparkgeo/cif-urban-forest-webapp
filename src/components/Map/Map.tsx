@@ -11,10 +11,61 @@ import { useState } from 'react'
 import axios from 'axios'
 import maplibregl, { LngLatBounds } from 'maplibre-gl'
 
-import { basemapStyle } from '../styles/maplibre/basemapStyle'
-import { INITIAL_VIEW_STATE } from '../constants'
-import { theme } from '../styles/theme'
-import { treeStyle } from '../styles/maplibre/treesStyle'
+import { basemapStyle } from './basemapStyle'
+import { INITIAL_VIEW_STATE } from '../../constants'
+import { theme } from '../../globalStyles/theme'
+import { treeStyle } from './treesStyle'
+
+interface TreeApiFeatureCollection extends FeatureCollection {
+  limit: number
+  count: number
+}
+
+const mockTreesResponse: TreeApiFeatureCollection = {
+  type: 'FeatureCollection',
+  limit: 100,
+  count: 28,
+  features: [
+    {
+      type: 'Feature',
+      properties: {
+        Id: '4',
+        City: 'Toronto',
+        'Botanical Name Species': 'Acer platanoides',
+        'Common Species': 'Maple Norway',
+        'Cultivar Name': '',
+        Neighbourhood: "Toronto-St. Paul's",
+        Address: '365 SPADINA RD',
+        'Botanical Name Genus': 'Acer',
+        'Common Genus': 'Maple',
+        'DBH (cm)': 67.0,
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [-79.4115, 43.6868],
+      },
+    },
+    {
+      type: 'Feature',
+      properties: {
+        Id: '6',
+        City: 'Toronto',
+        'Botanical Name Species': 'Acer platanoides',
+        'Common Species': 'Maple Norway',
+        'Cultivar Name': '',
+        Neighbourhood: 'Don Valley North',
+        Address: '2877 BAYVIEW AVE TO, EY, NY',
+        'Botanical Name Genus': 'Acer',
+        'Common Genus': 'Maple',
+        'DBH (cm)': 28.0,
+      },
+      geometry: {
+        type: 'Point',
+        coordinates: [-79.3835, 43.7689],
+      },
+    },
+  ],
+}
 
 export function Map() {
   const [trees, setTrees] = useState<FeatureCollection>({
@@ -38,18 +89,8 @@ export function Map() {
 
     axios
       .get(treeApiUrl)
-      .then((response) => {
-        console.log(response)
-        // setTrees({
-        //   type: 'FeatureCollection',
-        //   features: [
-        //     {
-        //       type: 'Feature',
-        //       properties: {},
-        //       geometry: { type: 'Point', coordinates: event.target.getCenter().toArray() },
-        //     },
-        //   ],
-        // })
+      .then(() => {
+        setTrees(mockTreesResponse)
       })
       .catch(() => alert('we will handle errors later. This is a placeholder'))
   }

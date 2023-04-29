@@ -3,7 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import { App } from './App'
-import './styles/normalize.css'
+import './globalStyles/normalize.css'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 const router = createBrowserRouter([

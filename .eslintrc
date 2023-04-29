@@ -4,6 +4,7 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "arrow-body-style": "off",
     "import/no-default-export": "error",
     "import/no-named-as-default-member": "off",
     "import/prefer-default-export": "off",
