@@ -1,24 +1,7 @@
-export interface LocationsStateProvinceValues {
-  municipalitiesChecked?: boolean[]
-  isAnyMunicipalityChecked?: boolean
-  isProvinceIndeterminate?: boolean
-}
-export interface LocationsState {
-  [key: string]: LocationsStateProvinceValues
-}
-
-interface LocationsAction {
-  type:
-    | 'toggleAllMunicipalities'
-    | 'toggleAllMunicipalitiesForProvince'
-    | 'toggleMunicipalityChecked'
-  payload: any // using a union type here necessitates typeguarding, which adds too many layers of conditionals in the reducer
-}
-
-interface ToggleAllMunicipalitiesForProvinceProps {
-  state: LocationsState
-  action: LocationsAction
-}
+import {
+  LocationsState,
+  ToggleAllMunicipalitiesForProvinceProps,
+} from '../../types/locationsFilterTypes'
 
 const toggleAllMunicipalitiesForProvince = ({
   action,

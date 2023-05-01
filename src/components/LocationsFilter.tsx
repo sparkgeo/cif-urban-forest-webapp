@@ -1,27 +1,15 @@
 import { Checkbox } from '@mui/material'
 import { ChangeEvent, useReducer } from 'react'
-import { CifFormControlLabel, CifList, CifListItem } from './customMuiFormComponents'
-import { ColumnFullWidth } from './generic/containers'
+import { CifFormControlLabel, CifList } from './customMuiFormComponents'
+import { locationsCheckedReducer } from './Map/locationsCheckedReducer'
+import { ProvincesFilter } from './ProvincesFilter'
 import {
+  HandleMunicipalityCheckboxChangeProps,
+  HandleProvinceCheckboxChangeProps,
+  Locations,
   LocationsState,
   LocationsStateProvinceValues,
-  locationsCheckedReducer,
-} from './Map/locationsCheckedReducer'
-
-interface Locations {
-  provinces: string[]
-  municipalities: { [key: string]: string[] }
-}
-interface HandleProvinceCheckboxChangeProps {
-  isChecked: boolean
-  province: string
-}
-
-interface HandleMunicipalityCheckboxChangeProps {
-  municipalityDisplayIndex: number
-  province: string
-  isMunicipalityChecked: boolean
-}
+} from '../types/locationsFilterTypes'
 
 const locations: Locations = {
   provinces: ['British Columbia', 'Alberta', 'Ontario'],
@@ -86,55 +74,15 @@ export function LocationsFilter() {
   const provinceCheckboxes = (
     <CifList>
       {provinces.map((province) => {
-        const isAnyProvincialMunicipalityChecked =
-          !!locationsCheckedState[province]?.isAnyMunicipalityChecked
-        const isProvinceIndeterminate = !!locationsCheckedState[province]?.isProvinceIndeterminate
-
         return (
-          <CifListItem key={province}>
-            <ColumnFullWidth>
-              <CifFormControlLabel
-                label={province}
-                control={
-                  <Checkbox
-                    checked={isAnyProvincialMunicipalityChecked}
-                    indeterminate={isProvinceIndeterminate}
-                    onChange={(event) => {
-                      handleProvinceCheckboxChange({ isChecked: event.target.checked, province })
-                    }}
-                  />
-                }
-              />
-
-              <CifList>
-                {municipalities[province]?.map((municipality, municipalityDisplayIndex) => {
-                  const isMunicipalityChecked =
-                    !!locationsCheckedState?.[province]?.municipalitiesChecked?.[
-                      municipalityDisplayIndex
-                    ]
-                  return (
-                    <CifListItem key={municipality}>
-                      <CifFormControlLabel
-                        label={municipality}
-                        control={
-                          <Checkbox
-                            checked={isMunicipalityChecked}
-                            onChange={(event) => {
-                              handleMunicipalityCheckboxChange({
-                                municipalityDisplayIndex,
-                                province,
-                                isMunicipalityChecked: event.target.checked,
-                              })
-                            }}
-                          />
-                        }
-                      />
-                    </CifListItem>
-                  )
-                })}
-              </CifList>
-            </ColumnFullWidth>
-          </CifListItem>
+          <ProvincesFilter
+            key={province}
+            handleMunicipalityCheckboxChange={handleMunicipalityCheckboxChange}
+            handleProvinceCheckboxChange={handleProvinceCheckboxChange}
+            locationsCheckedState={locationsCheckedState}
+            municipalities={municipalities}
+            province={province}
+          />
         )
       })}
     </CifList>
