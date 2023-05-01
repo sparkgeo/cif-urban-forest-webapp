@@ -1,5 +1,5 @@
-import { Checkbox } from '@mui/material'
-import { ChangeEvent, useReducer } from 'react'
+import { Checkbox, Collapse } from '@mui/material'
+import { ChangeEvent, useReducer, useState } from 'react'
 import { CifFormControlLabel, CifList } from './customMuiFormComponents'
 import { locationsCheckedReducer } from './Map/locationsCheckedReducer'
 import { ProvincesFilter } from './ProvincesFilter'
@@ -10,6 +10,8 @@ import {
   LocationsState,
   LocationsStateProvinceValues,
 } from '../types/locationsFilterTypes'
+import { ButtonExpandCollapse } from './ButtonExpandCollapse'
+import { RowAlignItemsCenter } from './containers'
 
 const locations: Locations = {
   provinces: ['British Columbia', 'Alberta', 'Ontario'],
@@ -24,6 +26,7 @@ const { provinces, municipalities } = locations
 const intialLocationsState: LocationsState = {}
 
 export function LocationsFilter() {
+  const [isLocationsFilterExpanded, setIsLocationsFilterExpanded] = useState(false)
   const [locationsCheckedState, locationsCheckedDispatch] = useReducer(
     locationsCheckedReducer,
     intialLocationsState,
@@ -52,12 +55,20 @@ export function LocationsFilter() {
     })
   }
 
+  const toggleIsLocationsFilterExpanded = () => {
+    setIsLocationsFilterExpanded(!isLocationsFilterExpanded)
+  }
+
   const handleLocationCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
     const isChecked = event.target.checked
     locationsCheckedDispatch({
       type: 'toggleAllMunicipalities',
       payload: { isChecked, provinces, municipalities },
     })
+
+    if (isChecked) {
+      setIsLocationsFilterExpanded(true)
+    }
   }
 
   const handleMunicipalityCheckboxChange = ({
@@ -87,19 +98,26 @@ export function LocationsFilter() {
       })}
     </CifList>
   )
+
   return (
     <>
-      <CifFormControlLabel
-        label="Locations"
-        control={
-          <Checkbox
-            checked={isAnyMunicipalityChecked}
-            indeterminate={isLocationsIndeterminate}
-            onChange={handleLocationCheckboxChange}
-          />
-        }
-      />
-      {provinceCheckboxes}
+      <RowAlignItemsCenter>
+        <ButtonExpandCollapse
+          onClick={toggleIsLocationsFilterExpanded}
+          isExpanded={isLocationsFilterExpanded}
+        />
+        <CifFormControlLabel
+          label="Locations"
+          control={
+            <Checkbox
+              checked={isAnyMunicipalityChecked}
+              indeterminate={isLocationsIndeterminate}
+              onChange={handleLocationCheckboxChange}
+            />
+          }
+        />
+      </RowAlignItemsCenter>
+      <Collapse in={isLocationsFilterExpanded}>{provinceCheckboxes}</Collapse>
     </>
   )
 }

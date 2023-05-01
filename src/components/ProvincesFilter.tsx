@@ -1,5 +1,4 @@
-import { Checkbox, Collapse, styled } from '@mui/material'
-import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material'
+import { Checkbox, Collapse } from '@mui/material'
 import { ChangeEvent, useState } from 'react'
 
 import {
@@ -9,25 +8,8 @@ import {
   Municipalities,
 } from '../types/locationsFilterTypes'
 import { CifFormControlLabel, CifList, CifListItem } from './customMuiFormComponents'
-import { ColumnFullWidth } from './generic/containers'
-
-export const ProvinceRow = styled('div')`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  & button {
-    background: none;
-    color: inherit;
-    border: none;
-    padding: 0;
-    font: inherit;
-    cursor: pointer;
-    outline: inherit;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-`
+import { ColumnFullWidth, RowAlignItemsCenter } from './containers'
+import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 
 interface ProvincesFilterProps {
   handleMunicipalityCheckboxChange: (props: HandleMunicipalityCheckboxChangeProps) => void
@@ -65,11 +47,11 @@ export function ProvincesFilter({
   return (
     <CifListItem key={province}>
       <ColumnFullWidth>
-        <ProvinceRow>
-          <button type="button" onClick={expandCollapseMunicipalities}>
-            {areMunicipalitiyOptionsExpanded ? <KeyboardArrowDown /> : <KeyboardArrowRight />}
-          </button>
-
+        <RowAlignItemsCenter>
+          <ButtonExpandCollapse
+            isExpanded={areMunicipalitiyOptionsExpanded}
+            onClick={expandCollapseMunicipalities}
+          />
           <CifFormControlLabel
             label={province}
             control={
@@ -80,9 +62,9 @@ export function ProvincesFilter({
               />
             }
           />
-        </ProvinceRow>
+        </RowAlignItemsCenter>
 
-        <Collapse in={areMunicipalitiyOptionsExpanded} unmountOnExit>
+        <Collapse in={areMunicipalitiyOptionsExpanded}>
           <CifList>
             {municipalities[province]?.map((municipality, municipalityDisplayIndex) => {
               const isMunicipalityChecked =

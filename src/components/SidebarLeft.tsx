@@ -3,6 +3,7 @@ import { themeMui } from '../globalStyles/themeMui'
 import { LocationsFilter } from './LocationsFilter'
 // eslint-disable-next-line
 import { ReactComponent as CifLogo } from '../assets/logo.svg'
+import { SpeciesFilter } from './SpeciesFilter'
 
 const SideBarWrapper = styled('div')`
   padding: ${themeMui.spacing(3)};
@@ -20,6 +21,7 @@ export function Sidebar() {
         <StyledCifLogo alt="Canadian Institute of Forestry / Institude forestier du Canada Logo" />
       </a>
       <LocationsFilter />
+      <SpeciesFilter />
     </SideBarWrapper>
   )
 }

@@ -1,5 +1,5 @@
 import { styled } from '@mui/material'
-import { themeMui } from '../../globalStyles/themeMui'
+import { themeMui } from '../globalStyles/themeMui'
 
 export const H1 = styled('h1')`
   margin: ${themeMui.spacing(1)} 0;
