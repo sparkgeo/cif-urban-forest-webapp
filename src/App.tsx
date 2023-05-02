@@ -39,7 +39,7 @@ export function App() {
       })
       .catch(() => alert('we will handle errors later. This is a placeholder'))
   }
-  const sideBar = <Sidebar />
+  const sideBar = <Sidebar trees={trees} />
   const map = (
     <Map
       updateTrees={updateTrees}
