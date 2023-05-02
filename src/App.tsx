@@ -10,52 +10,7 @@ import { Sidebar } from './components/SidebarLeft'
 import { themeMui } from './globalStyles/themeMui'
 import { TreeApiFeatureCollection } from './types/topLevelAppTypes'
 import { Map } from './components/Map/Map'
-
-const mockTreesResponse: TreeApiFeatureCollection = {
-  type: 'FeatureCollection',
-  limit: 100,
-  count: 28,
-  features: [
-    {
-      type: 'Feature',
-      properties: {
-        Id: '4',
-        City: 'Toronto',
-        'Botanical Name Species': 'Acer platanoides',
-        'Common Species': 'Maple Norway',
-        'Cultivar Name': '',
-        Neighbourhood: "Toronto-St. Paul's",
-        Address: '365 SPADINA RD',
-        'Botanical Name Genus': 'Acer',
-        'Common Genus': 'Maple',
-        'DBH (cm)': 67.0,
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [-79.4115, 43.6868],
-      },
-    },
-    {
-      type: 'Feature',
-      properties: {
-        Id: '6',
-        City: 'Toronto',
-        'Botanical Name Species': 'Acer platanoides',
-        'Common Species': 'Maple Norway',
-        'Cultivar Name': '',
-        Neighbourhood: 'Don Valley North',
-        Address: '2877 BAYVIEW AVE TO, EY, NY',
-        'Botanical Name Genus': 'Acer',
-        'Common Genus': 'Maple',
-        'DBH (cm)': 28.0,
-      },
-      geometry: {
-        type: 'Point',
-        coordinates: [-79.3835, 43.7689],
-      },
-    },
-  ],
-}
+import { mockTreesResponse } from './mockTreesData'
 
 export function App() {
   const [trees, setTrees] = useState<TreeApiFeatureCollection>({
