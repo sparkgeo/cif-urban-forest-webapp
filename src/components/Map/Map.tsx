@@ -11,7 +11,7 @@ import { basemapStyle } from './basemapStyle'
 import { INITIAL_VIEW_STATE } from '../../constants'
 import { theme } from '../../globalStyles/theme'
 import { treeStyle } from './treesStyle'
-import { CifMapProps, SharableUrlParameters } from '../../types/typesJunkDrawer'
+import { CifMapProps, SharableUrlParameters } from '../../types/topLevelAppTypes'
 
 export function Map({ updateTrees, searchParameters, setSearchParameters, trees }: CifMapProps) {
   const updateUrlExtentParameters = (event: MapboxEvent | ViewStateChangeEvent) => {

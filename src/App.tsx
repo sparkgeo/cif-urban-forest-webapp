@@ -8,7 +8,7 @@ import axios from 'axios'
 import { Layout } from './components/Layout'
 import { Sidebar } from './components/SidebarLeft'
 import { themeMui } from './globalStyles/themeMui'
-import { TreeApiFeatureCollection } from './types/typesJunkDrawer'
+import { TreeApiFeatureCollection } from './types/topLevelAppTypes'
 import { Map } from './components/Map/Map'
 
 const mockTreesResponse: TreeApiFeatureCollection = {

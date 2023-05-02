@@ -1,5 +1,5 @@
 import { Autocomplete, Checkbox, Collapse, List, ListItem, TextField, Tooltip } from '@mui/material'
-import { ChangeEvent, useState } from 'react'
+import { SyntheticEvent, useState } from 'react'
 
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 import { CifFormControlLabel } from './customMuiFormComponents'
@@ -37,6 +37,7 @@ const speciesOptions: SpeciesOptions = {
 interface OptionLabelWithTooltipProps {
   option: SpeciesSingular
 }
+
 const OptionLabelWithTooltip = function OptionLabelWithTooltip({
   option,
   ...restOfProps
@@ -62,18 +63,21 @@ const OptionLabelWithTooltip = function OptionLabelWithTooltip({
 
 export function SpeciesFilter() {
   const [isSpeciesFilterExpanded, setIsSpeciesFilterExpanded] = useState(false)
-  const isSpeciesCheckboxIndeterminate = false
-  const isAnySpeciesSelected = false
+  const [selectedValues, setSelectedValues] = useState<SpeciesSingular[]>([])
+
+  const isAnySpeciesSelected = !!selectedValues.length
+  const isSpeciesCheckboxIndeterminate =
+    isAnySpeciesSelected && selectedValues.length < speciesOptions.masterSpeciesNames.length
 
   const toggleIsSpeciesFilterExpanded = () => {
     setIsSpeciesFilterExpanded(!isSpeciesFilterExpanded)
   }
-  const handleSpeciesCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const isChecked = event.target.checked
 
-    if (isChecked) {
-      setIsSpeciesFilterExpanded(true)
-    }
+  const handleSpeciesAutocompleteOnChange = (
+    event: SyntheticEvent<Element, Event>,
+    value: SpeciesSingular[],
+  ) => {
+    setSelectedValues(value)
   }
 
   return (
@@ -89,7 +93,6 @@ export function SpeciesFilter() {
             <Checkbox
               checked={isAnySpeciesSelected}
               indeterminate={isSpeciesCheckboxIndeterminate}
-              onChange={handleSpeciesCheckboxChange}
             />
           }
         />
@@ -101,6 +104,9 @@ export function SpeciesFilter() {
           getOptionLabel={(option) => option.label}
           renderOption={(props, option) => <OptionLabelWithTooltip option={option} {...props} />}
           renderInput={(params) => <TextField {...params} label="Species" />}
+          onChange={handleSpeciesAutocompleteOnChange}
+          value={selectedValues}
+          filterSelectedOptions
         />
       </Collapse>
     </>
