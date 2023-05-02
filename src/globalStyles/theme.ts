@@ -7,10 +7,9 @@ const color = {
     low: '#EBDB26',
   },
 }
-const headerHeight = '70px'
+
 const layout = {
-  headerHeight,
-  mapHeight: `calc(100vh - ${headerHeight})`,
+  mapHeight: '100vh',
 }
 
 const typography = {
