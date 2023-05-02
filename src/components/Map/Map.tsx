@@ -10,8 +10,8 @@ import maplibregl, { LngLatBounds } from 'maplibre-gl'
 import { basemapStyle } from './basemapStyle'
 import { INITIAL_VIEW_STATE } from '../../constants'
 import { theme } from '../../globalStyles/theme'
-import { treeStyle } from './treesStyle'
 import { CifMapProps, SharableUrlParameters } from '../../types/topLevelAppTypes'
+import { clusteredTreeLayer, treeCountLayer, unclusteredTreeLayer } from './mapLayers'
 
 export function Map({ updateTrees, searchParameters, setSearchParameters, trees }: CifMapProps) {
   const updateUrlExtentParameters = (event: MapboxEvent | ViewStateChangeEvent) => {
@@ -67,8 +67,10 @@ export function Map({ updateTrees, searchParameters, setSearchParameters, trees 
       onLoad={handleOnLoad}
       onMoveEnd={handleMoveEnd}
     >
-      <Source id="my-data" type="geojson" data={trees}>
-        <Layer {...treeStyle} />
+      <Source id="trees" type="geojson" data={trees} cluster clusterMaxZoom={14} clusterRadius={50}>
+        <Layer {...clusteredTreeLayer} />
+        <Layer {...treeCountLayer} />
+        <Layer {...unclusteredTreeLayer} />
       </Source>
     </ReactMapGl>
   )

@@ -2,6 +2,7 @@ import { MapboxStyle } from 'react-map-gl'
 
 export const basemapStyle: MapboxStyle = {
   version: 8,
+  glyphs: '/fonts/{fontstack}/{range}.pbf',
   sources: {
     basemap: {
       type: 'raster',
