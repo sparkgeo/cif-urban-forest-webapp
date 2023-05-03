@@ -6,18 +6,12 @@ const color = {
     medium: '#78CF98',
     low: '#EBDB26',
   },
+  white: '#ffffff',
 }
 
-const layout = {
-  mapHeight: '100vh',
-}
+const border = { radius: '4px' }
 
 const typography = {
   fontStack: ['Open Sans', 'sans-serif'],
-  xsmallFontSize: '1rem',
-  smallFontSize: '1.5rem',
-  fontSize: '2rem',
-  largeFontSize: '2.5rem',
-  xlargeFontSize: '3rem',
 }
-export const theme = { color, typography, layout }
+export const theme = { color, typography, border }

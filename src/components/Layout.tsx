@@ -1,4 +1,5 @@
 import { styled } from '@mui/material'
+import { MapKey } from './MapKey'
 
 interface LayoutProps {
   sideBar: JSX.Element
@@ -12,6 +13,7 @@ const LayoutWrapper = styled('div')`
 
 const Main = styled('main')`
   display: flex;
+  position: relative; // needed for map key positioning
 `
 
 export function Layout({ sideBar, map }: LayoutProps) {
@@ -20,6 +22,7 @@ export function Layout({ sideBar, map }: LayoutProps) {
       <Main>
         {sideBar}
         {map}
+        <MapKey />
       </Main>
     </LayoutWrapper>
   )
