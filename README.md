@@ -13,6 +13,12 @@ Think of this template more as a list of things to consider. Feel free to change
 
 ## Setting Up and Running a Development Environment
 
+- clone this repo
+- in the new repo directory on your maching run 'yarn'
+- add a `.env` file. Copy the key names from the `.env-sample` file. Ask a developer to share the key values.
+- run `yarn dev`
+- in the termal, the `yarn dev` command should give you an address where the app is served. Open a browser with that address.
+
 ## Deploying the app
 
 ## Tech Stack and Dependencies Worth Noting
