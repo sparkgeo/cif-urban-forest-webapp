@@ -1,20 +1,18 @@
 import { styled } from '@mui/material'
 import { themeMui } from '../globalStyles/themeMui'
 import { LocationsFilter } from './LocationsFilter'
-// eslint-disable-next-line
+// @ts-ignore.
 import { ReactComponent as CifLogo } from '../assets/logo.svg'
 import { SpeciesFilter } from './SpeciesFilter'
-import { TreeApiFeatureCollection } from '../types/topLevelAppTypes'
+import { SharableUrlParameters, TreeApiFeatureCollection } from '../types/topLevelAppTypes'
 
 const SideBarWrapper = styled('div')`
   padding: ${themeMui.spacing(3)};
   width: 400px;
 `
-
 const StyledCifLogo = styled(CifLogo)`
   margin-bottom: ${themeMui.spacing(5)};
 `
-
 const StyledTreeCount = styled('div')`
   font-weight: bold;
   display: flex;
@@ -23,8 +21,14 @@ const StyledTreeCount = styled('div')`
 `
 interface SidebarProps {
   trees: TreeApiFeatureCollection
+  searchParameters: SharableUrlParameters
+  setSearchParametersAndUpdateTrees: (urlParamaters: SharableUrlParameters) => void
 }
-export function Sidebar({ trees }: SidebarProps) {
+export function Sidebar({
+  searchParameters,
+  setSearchParametersAndUpdateTrees,
+  trees,
+}: SidebarProps) {
   const treeCount = trees?.features?.length
 
   return (
@@ -37,7 +41,10 @@ export function Sidebar({ trees }: SidebarProps) {
       </StyledTreeCount>
 
       <LocationsFilter />
-      <SpeciesFilter />
+      <SpeciesFilter
+        searchParameters={searchParameters}
+        setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
+      />
     </SideBarWrapper>
   )
 }

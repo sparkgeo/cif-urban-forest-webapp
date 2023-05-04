@@ -4,6 +4,7 @@ import { SyntheticEvent, useState } from 'react'
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 import { CifFormControlLabel } from './customMuiFormComponents'
 import { RowAlignItemsCenter } from './containers'
+import { SharableUrlParameters } from '../types/topLevelAppTypes'
 
 interface SpeciesSingular {
   label: string
@@ -21,7 +22,8 @@ const speciesOptions: SpeciesOptions = {
   masterSpeciesNames: [
     { label: 'fir', id: '1' },
     { label: 'hemlock', id: 2 },
-    { label: 'big leaf maple', id: 3 },
+    { label: 'Maple', id: 3 },
+    { label: 'maple', id: 3 },
   ],
   otherNames: {
     1: [
@@ -61,7 +63,15 @@ const OptionLabelWithTooltip = function OptionLabelWithTooltip({
   )
 }
 
-export function SpeciesFilter() {
+export interface SpeciesFilterProps {
+  searchParameters: SharableUrlParameters
+  setSearchParametersAndUpdateTrees: (urlParamaters: SharableUrlParameters) => void
+}
+
+export function SpeciesFilter({
+  searchParameters,
+  setSearchParametersAndUpdateTrees,
+}: SpeciesFilterProps) {
   const [isSpeciesFilterExpanded, setIsSpeciesFilterExpanded] = useState(false)
   const [selectedValues, setSelectedValues] = useState<SpeciesSingular[]>([])
 
@@ -78,6 +88,25 @@ export function SpeciesFilter() {
     value: SpeciesSingular[],
   ) => {
     setSelectedValues(value)
+    const areNoSpeciesSelected = !value.length
+
+    if (areNoSpeciesSelected) {
+      searchParameters.delete('common_genus')
+      const existingUrlParametersWithGenusDeleted = Object.fromEntries(searchParameters.entries())
+      setSearchParametersAndUpdateTrees({
+        ...existingUrlParametersWithGenusDeleted,
+      } as unknown as SharableUrlParameters)
+
+      return
+    }
+
+    const existingUrlParameters = Object.fromEntries(searchParameters.entries())
+
+    const genusLabels = value.map(({ label }) => label)
+    setSearchParametersAndUpdateTrees({
+      ...existingUrlParameters,
+      common_genus: genusLabels,
+    } as SharableUrlParameters)
   }
 
   return (
@@ -93,6 +122,7 @@ export function SpeciesFilter() {
             <Checkbox
               checked={isAnySpeciesSelected}
               indeterminate={isSpeciesCheckboxIndeterminate}
+              onClick={toggleIsSpeciesFilterExpanded}
             />
           }
         />

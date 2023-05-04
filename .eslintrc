@@ -4,6 +4,7 @@
     "project": "./tsconfig.json"
   },
   "rules": {
+    "@typescript-eslint/naming-convention": "off",
     "arrow-body-style": "off",
     "import/no-default-export": "error",
     "import/no-named-as-default-member": "off",

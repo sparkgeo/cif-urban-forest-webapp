@@ -1,4 +1,5 @@
 import {
+  LocationsAction,
   LocationsState,
   ToggleAllMunicipalitiesForProvinceProps,
 } from '../../types/locationsFilterTypes'

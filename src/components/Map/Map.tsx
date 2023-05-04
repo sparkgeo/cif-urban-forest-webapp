@@ -9,37 +9,46 @@ import maplibregl, { LngLatBounds } from 'maplibre-gl'
 
 import { basemapStyle } from './basemapStyle'
 import { INITIAL_VIEW_STATE } from '../../constants'
-import { CifMapProps, SharableUrlParameters } from '../../types/topLevelAppTypes'
+import { SharableUrlParameters, TreeApiFeatureCollection } from '../../types/topLevelAppTypes'
 import { clusteredTreeLayer, treeCountLayer, unclusteredTreeLayer } from './mapLayers'
 
-export function Map({ updateTrees, searchParameters, setSearchParameters, trees }: CifMapProps) {
+export interface CifMapProps {
+  updateTrees: () => void
+  searchParameters: SharableUrlParameters
+  setSearchParametersAndUpdateTrees: (urlParamaters: SharableUrlParameters) => void
+  trees: TreeApiFeatureCollection
+}
+
+export function Map({
+  searchParameters,
+  setSearchParametersAndUpdateTrees,
+  trees,
+  updateTrees,
+}: CifMapProps) {
   const updateUrlExtentParameters = (event: MapboxEvent | ViewStateChangeEvent) => {
     const mapBounds = event.target.getBounds()
-    const existingUrlParameters = Object.fromEntries(searchParameters.entries())
 
-    const east = mapBounds.getEast().toFixed(4)
-    const south = mapBounds.getSouth().toFixed(4)
-    const west = mapBounds.getWest().toFixed(4)
-    const north = mapBounds.getNorth().toFixed(4)
-    setSearchParameters({
-      ...existingUrlParameters,
-      east,
-      south,
-      west,
-      north,
+    const min_lat = mapBounds.getSouth().toFixed(4)
+    const min_lng = mapBounds.getWest().toFixed(4)
+    const max_lat = mapBounds.getNorth().toFixed(4)
+    const max_lng = mapBounds.getEast().toFixed(4)
+    setSearchParametersAndUpdateTrees({
+      min_lat,
+      min_lng,
+      max_lat,
+      max_lng,
     } as SharableUrlParameters)
   }
 
   const updateInitialMapExtentIfExtentParametersExistInUrl = (event: MapboxEvent) => {
     const existingUrlParameters = Object.fromEntries(searchParameters.entries())
-    const { east, south, west, north } = existingUrlParameters
+    const { min_lat: south, min_lng: west, max_lat: north, max_lng: east } = existingUrlParameters
 
     if (east && south && west && north) {
       const newMapBounds = new LngLatBounds(
         [Number(west), Number(south)],
         [Number(east), Number(north)],
       )
-
       const mapInstance = event.target
       mapInstance.fitBounds(newMapBounds as unknown as LngLatBoundsLike, {
         duration: 0,
@@ -48,12 +57,11 @@ export function Map({ updateTrees, searchParameters, setSearchParameters, trees 
   }
   const handleOnLoad = (event: MapboxEvent) => {
     updateInitialMapExtentIfExtentParametersExistInUrl(event)
-    updateTrees(event)
+    updateTrees()
   }
 
   const handleMoveEnd = (event: ViewStateChangeEvent) => {
     updateUrlExtentParameters(event)
-    updateTrees(event)
   }
 
   return (

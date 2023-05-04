@@ -1,16 +1,14 @@
-import { MapboxEvent } from 'mapbox-gl'
 import { ThemeProvider } from '@mui/material'
 import { useSearchParams } from 'react-router-dom'
 import { useState } from 'react'
-import { ViewStateChangeEvent } from 'react-map-gl'
 import axios from 'axios'
 
 import { Layout } from './components/Layout'
 import { Sidebar } from './components/SidebarLeft'
 import { themeMui } from './globalStyles/themeMui'
-import { TreeApiFeatureCollection } from './types/topLevelAppTypes'
+import { SharableUrlParameters, TreeApiFeatureCollection } from './types/topLevelAppTypes'
 import { Map } from './components/Map/Map'
-import { mockTreesResponse } from './mockTreesData'
+import { getSearchParameterStringFromSharableUrlParametersObject } from './library/getSearchParameterStringFromSharableUrlParametersObject'
 
 export function App() {
   const [trees, setTrees] = useState<TreeApiFeatureCollection>({
@@ -19,32 +17,60 @@ export function App() {
   })
   const [searchParameters, setSearchParameters] = useSearchParams()
 
-  const updateTrees = (event: MapboxEvent | ViewStateChangeEvent) => {
-    const mapBounds = event.target.getBounds()
-    const minLat = mapBounds.getEast()
-    const minLng = mapBounds.getSouth()
-    const maxLat = mapBounds.getWest()
-    const maxLng = mapBounds.getNorth()
+  const getApiTreeSearchUrl = (filterParameters: SharableUrlParameters | void): string => {
+    if (filterParameters) {
+      const searchParametersStringFromFunctionParameters =
+        getSearchParameterStringFromSharableUrlParametersObject(filterParameters)
 
-    const treeApiUrl = `${import.meta.env.VITE_CIF_URBAN_FOREST_API}/trees/search?
-      min_lat=${minLat}
-      &min_lng=${minLng}
-      &max_lat=${maxLat}
-      &max_lng=${maxLng}`
+      return `${
+        import.meta.env.VITE_CIF_URBAN_FOREST_API
+      }/trees/search? ${searchParametersStringFromFunctionParameters}` // the space there is important! remove it and no results??
+    }
+
+    const apiUrlWithParametersFromAppUrl = `${
+      import.meta.env.VITE_CIF_URBAN_FOREST_API
+    }/trees/search? ${searchParameters.toString()}` // the space there is important! remove it and no results??
+
+    return apiUrlWithParametersFromAppUrl
+  }
+
+  const updateTrees = (filterParameters: SharableUrlParameters | void) => {
+    const treeApiUrl = getApiTreeSearchUrl(filterParameters)
 
     axios
       .get(treeApiUrl)
-      .then(() => {
-        setTrees(mockTreesResponse)
+      .then(({ data: apiTreeData }) => {
+        setTrees(apiTreeData)
       })
       .catch(() => alert('we will handle errors later. This is a placeholder'))
   }
-  const sideBar = <Sidebar trees={trees} />
+
+  const setSearchParametersAndUpdateTrees = (newParameters: SharableUrlParameters) => {
+    const existingUrlParameters = Object.fromEntries(searchParameters.entries())
+    const updatedUrlParameters = {
+      ...existingUrlParameters,
+      ...newParameters,
+    } as SharableUrlParameters
+
+    setSearchParameters(updatedUrlParameters)
+    // we cant rely on the the parameters being set before we update the trees,
+    // so we add the filterParameters parameter with the most updated
+    // parameters and avoid pulling query parameters from the url
+    updateTrees(updatedUrlParameters)
+  }
+
+  const sideBar = (
+    <Sidebar
+      trees={trees}
+      searchParameters={searchParameters}
+      setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
+    />
+  )
   const map = (
     <Map
       updateTrees={updateTrees}
       searchParameters={searchParameters}
-      setSearchParameters={setSearchParameters}
+      setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
       trees={trees}
     />
   )
