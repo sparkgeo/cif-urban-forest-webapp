@@ -20,10 +20,9 @@ interface SpeciesOptions {
 }
 const speciesOptions: SpeciesOptions = {
   masterSpeciesNames: [
-    { label: 'fir', id: '1' },
-    { label: 'hemlock', id: 2 },
-    { label: 'Maple', id: 3 },
-    { label: 'maple', id: 3 },
+    { label: 'fir (placeholder)', id: '1' },
+    { label: 'hemlock (placeholder)', id: 2 },
+    { label: 'maple (placeholder)', id: 3 },
   ],
   otherNames: {
     1: [
