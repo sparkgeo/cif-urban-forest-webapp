@@ -6,6 +6,7 @@ const color = {
     medium: '#78CF98',
     low: '#EBDB26',
   },
+  charcoal: '#393e49',
   white: '#ffffff',
 }
 

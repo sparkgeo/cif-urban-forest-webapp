@@ -1,10 +1,14 @@
 import ReactMapGl, {
   Layer,
   LngLatBoundsLike,
+  MapLayerMouseEvent,
   MapboxEvent,
+  MapboxGeoJSONFeature,
+  MapboxMap,
   Source,
   ViewStateChangeEvent,
 } from 'react-map-gl'
+
 import maplibregl, { LngLatBounds } from 'maplibre-gl'
 
 import { basemapStyle } from './basemapStyle'
@@ -60,10 +64,33 @@ export function Map({
     updateUrlExtentParameters(event)
   }
   const handleOnLoad = (event: MapboxEvent) => {
+    const map: MapboxMap = event.target
     updateInitialMapExtentIfExtentParametersExistInUrl(event)
     updateTrees()
 
-    event.target.on('moveend', handleMoveEnd)
+    map.on('moveend', handleMoveEnd)
+    map.on('click', 'tree-clusters', (mouseEvent: MapLayerMouseEvent) => {
+      const features: MapboxGeoJSONFeature[] = map.queryRenderedFeatures(mouseEvent.point, {
+        layers: ['tree-clusters'],
+      })
+      const clusterId = features[0]?.properties?.cluster_id
+      map
+        .getSource('trees')
+        .getClusterExpansionZoom(clusterId, (error: any, zoom: number | undefined) => {
+          if (error) return
+
+          map.easeTo({
+            center: features[0].geometry.coordinates,
+            zoom,
+          })
+        })
+    })
+    map.on('mouseenter', 'tree-clusters', () => {
+      map.getCanvas().style.cursor = 'pointer'
+    })
+    map.on('mouseleave', 'tree-clusters', () => {
+      map.getCanvas().style.cursor = ''
+    })
   }
   return (
     <ReactMapGl
