@@ -13,10 +13,10 @@ import { SharableUrlParameters, TreeApiFeatureCollection } from '../../types/top
 import { clusteredTreeLayer, treeCountLayer, unclusteredTreeLayer } from './mapLayers'
 
 export interface CifMapProps {
-  updateTrees: () => void
   searchParameters: SharableUrlParameters
   setSearchParametersAndUpdateTrees: (urlParamaters: SharableUrlParameters) => void
   trees: TreeApiFeatureCollection
+  updateTrees: () => void
 }
 
 export function Map({
@@ -55,15 +55,16 @@ export function Map({
       })
     }
   }
-  const handleOnLoad = (event: MapboxEvent) => {
-    updateInitialMapExtentIfExtentParametersExistInUrl(event)
-    updateTrees()
-  }
 
   const handleMoveEnd = (event: ViewStateChangeEvent) => {
     updateUrlExtentParameters(event)
   }
+  const handleOnLoad = (event: MapboxEvent) => {
+    updateInitialMapExtentIfExtentParametersExistInUrl(event)
+    updateTrees()
 
+    event.target.on('moveend', handleMoveEnd)
+  }
   return (
     <ReactMapGl
       mapboxAccessToken={import.meta.env.VITE_MAPBOX_API_KEY}
@@ -72,7 +73,6 @@ export function Map({
       mapLib={maplibregl}
       mapStyle={basemapStyle}
       onLoad={handleOnLoad}
-      onMoveEnd={handleMoveEnd}
     >
       <Source id="trees" type="geojson" data={trees} cluster clusterMaxZoom={14} clusterRadius={50}>
         <Layer {...clusteredTreeLayer} />

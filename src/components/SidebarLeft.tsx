@@ -5,6 +5,8 @@ import { LocationsFilter } from './LocationsFilter'
 import { ReactComponent as CifLogo } from '../assets/logo.svg'
 import { SpeciesFilter } from './SpeciesFilter'
 import { SharableUrlParameters, TreeApiFeatureCollection } from '../types/topLevelAppTypes'
+import { Municipalities, Provinces } from '../types/locationsFilterTypes'
+import { Loader } from './Loader'
 
 const SideBarWrapper = styled('div')`
   padding: ${themeMui.spacing(3)};
@@ -23,11 +25,17 @@ interface SidebarProps {
   trees: TreeApiFeatureCollection
   searchParameters: SharableUrlParameters
   setSearchParametersAndUpdateTrees: (urlParamaters: SharableUrlParameters) => void
+  provinces: Provinces
+  municipalities: Municipalities
+  isDataInitializing: boolean
 }
 export function Sidebar({
+  municipalities,
+  provinces,
   searchParameters,
   setSearchParametersAndUpdateTrees,
   trees,
+  isDataInitializing,
 }: SidebarProps) {
   const treeCount = trees?.features?.length
 
@@ -36,15 +44,26 @@ export function Sidebar({
       <a href="http://www.cif-ifc.org/" target="_blank" rel="noreferrer">
         <StyledCifLogo alt="Canadian Institute of Forestry / Institude forestier du Canada Logo" />
       </a>
-      <StyledTreeCount>
-        <div>{treeCount} trees shown</div>
-      </StyledTreeCount>
+      {isDataInitializing ? (
+        <Loader />
+      ) : (
+        <>
+          <StyledTreeCount>
+            <div>{treeCount} trees shown</div>
+          </StyledTreeCount>
 
-      <LocationsFilter />
-      <SpeciesFilter
-        searchParameters={searchParameters}
-        setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
-      />
+          <LocationsFilter
+            provinces={provinces}
+            municipalities={municipalities}
+            setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
+            searchParameters={searchParameters}
+          />
+          <SpeciesFilter
+            searchParameters={searchParameters}
+            setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
+          />
+        </>
+      )}
     </SideBarWrapper>
   )
 }

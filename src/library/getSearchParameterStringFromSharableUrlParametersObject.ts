@@ -4,8 +4,9 @@ export function getSearchParameterStringFromSharableUrlParametersObject(
   sharableUrlParameters: SharableUrlParameters,
 ) {
   const sharableUrlParameterEntries = Object.entries(sharableUrlParameters)
-  sharableUrlParameterEntries.reduce<string>((previousValue, currentValue, currentIndex) => {
+  return sharableUrlParameterEntries.reduce<string>((previousValue, currentValue, currentIndex) => {
     const [keyName, value] = currentValue
+
     const accumulatorsInitialIndexValueIfNoInitialValueProvided = 0
     if (currentIndex === accumulatorsInitialIndexValueIfNoInitialValueProvided) {
       return `${keyName}=${value}`

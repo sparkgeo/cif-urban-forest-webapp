@@ -9,6 +9,7 @@
     "import/no-default-export": "error",
     "import/no-named-as-default-member": "off",
     "import/prefer-default-export": "off",
+    "prefer-arrow-callback": "off",
     "react/jsx-props-no-spreading": "off",
     "react/react-in-jsx-scope": "off"
   }

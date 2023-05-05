@@ -6,6 +6,7 @@ export interface SharableUrlParameters extends URLSearchParams {
   max_lat?: string
   max_lng?: string
   common_genus?: string | string[]
+  city?: string | string[]
 }
 
 export interface TreeApiFeatureCollection extends FeatureCollection {

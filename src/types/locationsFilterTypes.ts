@@ -1,8 +1,9 @@
 export interface Municipalities {
   [key: string]: string[]
 }
+export type Provinces = string[]
 export interface Locations {
-  provinces: string[]
+  provinces: Provinces
   municipalities: Municipalities
 }
 export interface HandleProvinceCheckboxChangeProps {

@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@mui/material'
 import { useSearchParams } from 'react-router-dom'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import axios from 'axios'
 
 import { Layout } from './components/Layout'
@@ -8,7 +8,7 @@ import { Sidebar } from './components/SidebarLeft'
 import { themeMui } from './globalStyles/themeMui'
 import { SharableUrlParameters, TreeApiFeatureCollection } from './types/topLevelAppTypes'
 import { Map } from './components/Map/Map'
-import { getSearchParameterStringFromSharableUrlParametersObject } from './library/getSearchParameterStringFromSharableUrlParametersObject'
+import { Municipalities } from './types/locationsFilterTypes'
 
 export function App() {
   const [trees, setTrees] = useState<TreeApiFeatureCollection>({
@@ -16,26 +16,34 @@ export function App() {
     features: [],
   })
   const [searchParameters, setSearchParameters] = useSearchParams()
+  const [provinces, setProvinces] = useState<string[]>([])
+  const [municipalities, setMunicipalities] = useState<Municipalities>({})
+  const [areLocationOptionsLoading, setAreLocationOptionsLoading] = useState(true)
+  const isDataInitializing = areLocationOptionsLoading
 
-  const getApiTreeSearchUrl = (filterParameters: SharableUrlParameters | void): string => {
-    if (filterParameters) {
-      const searchParametersStringFromFunctionParameters =
-        getSearchParameterStringFromSharableUrlParametersObject(filterParameters)
-
-      return `${
-        import.meta.env.VITE_CIF_URBAN_FOREST_API
-      }/trees/search? ${searchParametersStringFromFunctionParameters}` // the space there is important! remove it and no results??
-    }
-
-    const apiUrlWithParametersFromAppUrl = `${
+  useEffect(function loadLocationsOptions() {
+    const locationsOptionsUrl = `${
       import.meta.env.VITE_CIF_URBAN_FOREST_API
-    }/trees/search? ${searchParameters.toString()}` // the space there is important! remove it and no results??
+    }/data/overview?provinces=True`
 
-    return apiUrlWithParametersFromAppUrl
-  }
+    axios
+      .get(locationsOptionsUrl)
+      .then(({ data }) => {
+        setAreLocationOptionsLoading(false)
+        const { provinces: municipalitiesByProvince } = data
+        setProvinces(Object.keys(municipalitiesByProvince))
+        setMunicipalities(municipalitiesByProvince)
+      })
+      .catch((error) => {
+        setAreLocationOptionsLoading(false)
+        alert(error)
+      })
+  }, [])
 
-  const updateTrees = (filterParameters: SharableUrlParameters | void) => {
-    const treeApiUrl = getApiTreeSearchUrl(filterParameters)
+  const updateTrees = useCallback(() => {
+    const treeApiUrl = `${
+      import.meta.env.VITE_CIF_URBAN_FOREST_API
+    }/trees/search?${searchParameters.toString()}`
 
     axios
       .get(treeApiUrl)
@@ -43,27 +51,31 @@ export function App() {
         setTrees(apiTreeData)
       })
       .catch(() => alert('we will handle errors later. This is a placeholder'))
-  }
+  }, [searchParameters])
 
-  const setSearchParametersAndUpdateTrees = (newParameters: SharableUrlParameters) => {
-    const existingUrlParameters = Object.fromEntries(searchParameters.entries())
-    const updatedUrlParameters = {
-      ...existingUrlParameters,
-      ...newParameters,
-    } as SharableUrlParameters
+  const setSearchParametersAndUpdateTrees = useCallback(
+    (newParameters: SharableUrlParameters) => {
+      const existingUrlParameters = Object.fromEntries(searchParameters.entries())
+      const updatedUrlParameters = {
+        ...existingUrlParameters,
+        ...newParameters,
+      } as SharableUrlParameters
 
-    setSearchParameters(updatedUrlParameters)
-    // we cant rely on the the parameters being set before we update the trees,
-    // so we add the filterParameters parameter with the most updated
-    // parameters and avoid pulling query parameters from the url
-    updateTrees(updatedUrlParameters)
-  }
+      setSearchParameters(updatedUrlParameters)
+
+      updateTrees()
+    },
+    [searchParameters, setSearchParameters, updateTrees],
+  )
 
   const sideBar = (
     <Sidebar
       trees={trees}
       searchParameters={searchParameters}
       setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
+      provinces={provinces}
+      municipalities={municipalities}
+      isDataInitializing={isDataInitializing}
     />
   )
   const map = (

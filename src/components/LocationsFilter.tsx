@@ -1,36 +1,41 @@
 import { Checkbox, Collapse } from '@mui/material'
-import { ChangeEvent, useReducer, useState } from 'react'
+import { ChangeEvent, Dispatch, useEffect, useReducer, useState } from 'react'
 import { CifFormControlLabel, CifList } from './customMuiFormComponents'
 import { locationsCheckedReducer } from './Map/locationsCheckedReducer'
 import { ProvincesFilter } from './ProvincesFilter'
 import {
   HandleMunicipalityCheckboxChangeProps,
   HandleProvinceCheckboxChangeProps,
-  Locations,
+  LocationsAction,
   LocationsState,
   LocationsStateProvinceValues,
+  Municipalities,
+  Provinces,
 } from '../types/locationsFilterTypes'
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 import { RowAlignItemsCenter } from './containers'
-
-const locations: Locations = {
-  provinces: ['British Columbia', 'Alberta', 'Ontario'],
-  municipalities: {
-    'British Columbia': ['Penticton', 'Princton', 'Kimberley', 'Vancouver', 'Youbou', 'Greenwood'],
-    Alberta: ['Vulcan', 'Calgary', 'Longview', 'Coleman'],
-  },
-}
-
-const { provinces, municipalities } = locations
+import { SharableUrlParameters } from '../types/topLevelAppTypes'
 
 const intialLocationsState: LocationsState = {}
+interface LocationsFilterProps {
+  municipalities: Municipalities
+  provinces: Provinces
+  searchParameters: SharableUrlParameters
+  setSearchParametersAndUpdateTrees: (urlParamaters: SharableUrlParameters) => void
+}
 
-export function LocationsFilter() {
+export function LocationsFilter({
+  municipalities,
+  provinces,
+  searchParameters,
+  setSearchParametersAndUpdateTrees,
+}: LocationsFilterProps) {
   const [isLocationsFilterExpanded, setIsLocationsFilterExpanded] = useState(false)
-  const [locationsCheckedState, locationsCheckedDispatch] = useReducer(
-    locationsCheckedReducer,
-    intialLocationsState,
-  )
+  const [locationsCheckedState, locationsCheckedDispatch]: [
+    LocationsState,
+    Dispatch<LocationsAction>,
+  ] = useReducer(locationsCheckedReducer, intialLocationsState)
+
   const allMunicipalitiesFlattened = Object.values(municipalities).flat()
   const allMunicipalitiesCount = allMunicipalitiesFlattened.length
   const provincialCheckedStates: LocationsStateProvinceValues[] =
@@ -45,6 +50,57 @@ export function LocationsFilter() {
   const isLocationsIndeterminate =
     isAnyMunicipalityChecked && allCheckedMunicipalitiesCount < allMunicipalitiesCount
 
+  const toggleIsLocationsFilterExpanded = () => {
+    setIsLocationsFilterExpanded(!isLocationsFilterExpanded)
+  }
+
+  useEffect(
+    function updateLocationFilterSearchParametersOnChange() {
+      const getCheckedMunicipalityNames = (
+        province: string,
+        locationsStateProvinceValues: LocationsStateProvinceValues,
+      ) => {
+        return locationsStateProvinceValues.municipalitiesChecked
+          ?.map((isChecked: boolean, index: number) =>
+            isChecked ? municipalities[province][index] : null,
+          )
+          .filter((municipalityName) => !!municipalityName)
+      }
+      const setMunicipalitiesUrlParameters = () => {
+        const locationscheckedStateEntries: [string, LocationsStateProvinceValues][] =
+          Object.entries(locationsCheckedState)
+        const allMunicipalitiesNamesChecked = locationscheckedStateEntries
+          .map(([province, value]) => {
+            return getCheckedMunicipalityNames(province, value as LocationsStateProvinceValues)
+          })
+          .flat()
+
+        const areLocationsSelected = !!allMunicipalitiesNamesChecked.length
+
+        if (!areLocationsSelected) {
+          searchParameters.delete('city')
+          const existingUrlParametersWithCityDeleted = Object.fromEntries(
+            searchParameters.entries(),
+          )
+          setSearchParametersAndUpdateTrees({
+            ...existingUrlParametersWithCityDeleted,
+          } as unknown as SharableUrlParameters)
+
+          return
+        }
+
+        const existingUrlParameters = Object.fromEntries(searchParameters.entries())
+        setSearchParametersAndUpdateTrees({
+          ...existingUrlParameters,
+          city: allMunicipalitiesNamesChecked,
+        } as SharableUrlParameters)
+      }
+
+      setMunicipalitiesUrlParameters()
+    },
+    [locationsCheckedState, municipalities, searchParameters, setSearchParametersAndUpdateTrees],
+  )
+
   const handleProvinceCheckboxChange = ({
     isChecked,
     province,
@@ -53,10 +109,6 @@ export function LocationsFilter() {
       type: 'toggleAllMunicipalitiesForProvince',
       payload: { municipalities, isChecked, province },
     })
-  }
-
-  const toggleIsLocationsFilterExpanded = () => {
-    setIsLocationsFilterExpanded(!isLocationsFilterExpanded)
   }
 
   const handleLocationCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {

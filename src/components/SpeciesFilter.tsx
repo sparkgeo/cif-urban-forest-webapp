@@ -63,7 +63,7 @@ const OptionLabelWithTooltip = function OptionLabelWithTooltip({
   )
 }
 
-export interface SpeciesFilterProps {
+interface SpeciesFilterProps {
   searchParameters: SharableUrlParameters
   setSearchParametersAndUpdateTrees: (urlParamaters: SharableUrlParameters) => void
 }
@@ -88,9 +88,9 @@ export function SpeciesFilter({
     value: SpeciesSingular[],
   ) => {
     setSelectedValues(value)
-    const areNoSpeciesSelected = !value.length
+    const areSpeciesSelected = !!value.length
 
-    if (areNoSpeciesSelected) {
+    if (!areSpeciesSelected) {
       searchParameters.delete('common_genus')
       const existingUrlParametersWithGenusDeleted = Object.fromEntries(searchParameters.entries())
       setSearchParametersAndUpdateTrees({
