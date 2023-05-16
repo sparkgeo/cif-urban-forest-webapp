@@ -44,6 +44,8 @@ export function ProvincesFilter({
     handleProvinceCheckboxChange({ isChecked: event.target.checked, province })
   }
 
+  const alphabeticallySortedProvincialMunicipalities = municipalities[province]?.sort() ?? []
+
   return (
     <CifListItem key={province}>
       <ColumnFullWidth>
@@ -66,31 +68,33 @@ export function ProvincesFilter({
 
         <Collapse in={areMunicipalitiyOptionsExpanded}>
           <CifList>
-            {municipalities[province]?.map((municipality, municipalityDisplayIndex) => {
-              const isMunicipalityChecked =
-                !!locationsCheckedState?.[province]?.municipalitiesChecked?.[
-                  municipalityDisplayIndex
-                ]
-              return (
-                <CifListItem key={municipality}>
-                  <CifFormControlLabel
-                    label={municipality}
-                    control={
-                      <Checkbox
-                        checked={isMunicipalityChecked}
-                        onChange={(event) => {
-                          handleMunicipalityCheckboxChange({
-                            municipalityDisplayIndex,
-                            province,
-                            isMunicipalityChecked: event.target.checked,
-                          })
-                        }}
-                      />
-                    }
-                  />
-                </CifListItem>
-              )
-            })}
+            {alphabeticallySortedProvincialMunicipalities.map(
+              (municipality, municipalityDisplayIndex) => {
+                const isMunicipalityChecked =
+                  !!locationsCheckedState?.[province]?.municipalitiesChecked?.[
+                    municipalityDisplayIndex
+                  ]
+                return (
+                  <CifListItem key={municipality}>
+                    <CifFormControlLabel
+                      label={municipality}
+                      control={
+                        <Checkbox
+                          checked={isMunicipalityChecked}
+                          onChange={(event) => {
+                            handleMunicipalityCheckboxChange({
+                              municipalityDisplayIndex,
+                              province,
+                              isMunicipalityChecked: event.target.checked,
+                            })
+                          }}
+                        />
+                      }
+                    />
+                  </CifListItem>
+                )
+              },
+            )}
           </CifList>
         </Collapse>
       </ColumnFullWidth>

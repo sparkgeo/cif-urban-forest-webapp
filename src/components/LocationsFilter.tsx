@@ -37,6 +37,8 @@ export function LocationsFilter({
     Dispatch<LocationsAction>,
   ] = useReducer(locationsCheckedReducer, intialLocationsState)
 
+  const alphebeticallySortedProvinces = [...provinces].sort()
+
   const allMunicipalitiesFlattened = Object.values(municipalities).flat()
   const allMunicipalitiesCount = allMunicipalitiesFlattened.length
   const provincialCheckedStates: LocationsStateProvinceValues[] =
@@ -152,7 +154,7 @@ export function LocationsFilter({
 
   const provinceCheckboxes = (
     <CifList>
-      {provinces.map((province) => {
+      {alphebeticallySortedProvinces.map((province) => {
         return (
           <ProvincesFilter
             key={province}
