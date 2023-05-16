@@ -7,11 +7,7 @@ import styled from '@emotion/styled'
 import { Layout } from './components/Layout'
 import { Sidebar } from './components/SidebarLeft'
 import { themeMui } from './globalStyles/themeMui'
-import {
-  SetSearchParametersAndUpdateTreesProps,
-  SharableUrlParameters,
-  TreeApiFeatureCollection,
-} from './types/topLevelAppTypes'
+import { SharableUrlParameters, TreeApiFeatureCollection } from './types/topLevelAppTypes'
 import { Map } from './components/Map/Map'
 import { Municipalities } from './types/locationsFilterTypes'
 import { RowAlignItemsCenter } from './components/containers'
@@ -58,9 +54,10 @@ export function App() {
 
   const updateTrees = useCallback(() => {
     setIsTreeDataLoading(true)
-    const treeApiUrl = `${
-      import.meta.env.VITE_CIF_URBAN_FOREST_API
-    }/trees/search?${searchParameters.toString()}`
+    // we cant trust react router dom's searchParams state, so we grab query parms from window
+    const treeApiUrl = `${import.meta.env.VITE_CIF_URBAN_FOREST_API}/trees/search?${
+      window.location.search
+    }`
 
     axios
       .get(treeApiUrl)
@@ -90,7 +87,7 @@ export function App() {
   )
 
   const setSearchParametersAndUpdateTrees = useCallback(
-    ({ newParameters }: SetSearchParametersAndUpdateTreesProps) => {
+    (newParameters: SharableUrlParameters) => {
       // we cant trust react router's searchParams state,
       // so we grab url params from window
       const existingSearchParameters = new URLSearchParams(window.location.search)

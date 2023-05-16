@@ -15,17 +15,14 @@ import {
 } from '../types/locationsFilterTypes'
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 import { RowAlignItemsCenter } from './containers'
-import {
-  SetSearchParametersAndUpdateTreesProps,
-  SharableUrlParameters,
-} from '../types/topLevelAppTypes'
+import { SetSearchParametersAndUpdateTrees, SharableUrlParameters } from '../types/topLevelAppTypes'
 
 const intialLocationsState: LocationsState = {}
 interface LocationsFilterProps {
   clearSearchParameterTypeAndUpdateTrees: (paramName: string) => void
   municipalities: Municipalities
   provinces: Provinces
-  setSearchParametersAndUpdateTrees: (props: SetSearchParametersAndUpdateTreesProps) => void
+  setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
 }
 
 export function LocationsFilter({
@@ -89,10 +86,8 @@ export function LocationsFilter({
     }
 
     setSearchParametersAndUpdateTrees({
-      newParameters: {
-        city: allMunicipalitiesNamesChecked,
-      } as SharableUrlParameters,
-    })
+      city: allMunicipalitiesNamesChecked,
+    } as SharableUrlParameters)
   }
 
   const handleProvinceCheckboxChange = ({

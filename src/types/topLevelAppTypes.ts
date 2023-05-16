@@ -13,7 +13,4 @@ export interface TreeApiFeatureCollection extends FeatureCollection {
   limit?: number
   count?: number
 }
-
-export interface SetSearchParametersAndUpdateTreesProps {
-  newParameters: SharableUrlParameters
-}
+export type SetSearchParametersAndUpdateTrees = (newParameters: SharableUrlParameters) => void

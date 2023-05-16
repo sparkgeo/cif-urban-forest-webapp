@@ -1,6 +1,6 @@
 import { styled } from '@mui/material'
 import {
-  SetSearchParametersAndUpdateTreesProps,
+  SetSearchParametersAndUpdateTrees,
   TreeApiFeatureCollection,
 } from '../types/topLevelAppTypes'
 
@@ -30,7 +30,7 @@ interface SidebarProps {
   isDataInitializing: boolean
   municipalities: Municipalities
   provinces: Provinces
-  setSearchParametersAndUpdateTrees: (props: SetSearchParametersAndUpdateTreesProps) => void
+  setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
   trees: TreeApiFeatureCollection
 }
 export function Sidebar({

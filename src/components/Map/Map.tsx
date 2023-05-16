@@ -14,7 +14,7 @@ import maplibregl, { LngLatBounds } from 'maplibre-gl'
 import { basemapStyle } from './basemapStyle'
 import { INITIAL_VIEW_STATE } from '../../constants'
 import {
-  SetSearchParametersAndUpdateTreesProps,
+  SetSearchParametersAndUpdateTrees,
   SharableUrlParameters,
   TreeApiFeatureCollection,
 } from '../../types/topLevelAppTypes'
@@ -22,7 +22,7 @@ import { clusteredTreeLayer, treeCountLayer, unclusteredTreeLayer } from './mapL
 
 export interface CifMapProps {
   searchParameters: SharableUrlParameters
-  setSearchParametersAndUpdateTrees: (props: SetSearchParametersAndUpdateTreesProps) => void
+  setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
   trees: TreeApiFeatureCollection
   updateTrees: () => void
 }
@@ -41,13 +41,11 @@ export function Map({
     const max_lat = mapBounds.getNorth().toFixed(4)
     const max_lng = mapBounds.getEast().toFixed(4)
     setSearchParametersAndUpdateTrees({
-      newParameters: {
-        min_lat,
-        min_lng,
-        max_lat,
-        max_lng,
-      } as SharableUrlParameters,
-    })
+      min_lat,
+      min_lng,
+      max_lat,
+      max_lng,
+    } as SharableUrlParameters)
   }
 
   const updateInitialMapExtentIfExtentParametersExistInUrl = (event: MapboxEvent) => {

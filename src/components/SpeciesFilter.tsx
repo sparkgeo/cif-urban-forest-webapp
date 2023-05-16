@@ -4,10 +4,7 @@ import { SyntheticEvent, useState } from 'react'
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 import { CifFormControlLabel } from './customMuiFormComponents'
 import { RowAlignItemsCenter } from './containers'
-import {
-  SetSearchParametersAndUpdateTreesProps,
-  SharableUrlParameters,
-} from '../types/topLevelAppTypes'
+import { SetSearchParametersAndUpdateTrees, SharableUrlParameters } from '../types/topLevelAppTypes'
 
 interface SpeciesSingular {
   label: string
@@ -66,7 +63,7 @@ const OptionLabelWithTooltip = function OptionLabelWithTooltip({
 }
 
 interface SpeciesFilterProps {
-  setSearchParametersAndUpdateTrees: (props: SetSearchParametersAndUpdateTreesProps) => void
+  setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
   clearSearchParameterTypeAndUpdateTrees: (paramName: string) => void
 }
 
@@ -99,10 +96,8 @@ export function SpeciesFilter({
     }
     const genusLabels = value.map(({ label }) => label)
     setSearchParametersAndUpdateTrees({
-      newParameters: {
-        common_genus: genusLabels,
-      } as SharableUrlParameters,
-    })
+      common_genus: genusLabels,
+    } as SharableUrlParameters)
   }
 
   return (
