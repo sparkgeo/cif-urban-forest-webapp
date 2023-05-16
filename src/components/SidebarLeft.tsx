@@ -1,12 +1,16 @@
 import { styled } from '@mui/material'
-import { themeMui } from '../globalStyles/themeMui'
+import {
+  SetSearchParametersAndUpdateTreesProps,
+  TreeApiFeatureCollection,
+} from '../types/topLevelAppTypes'
+
+import { Loader } from './Loader'
 import { LocationsFilter } from './LocationsFilter'
+import { Municipalities, Provinces } from '../types/locationsFilterTypes'
 // @ts-ignore.
 import { ReactComponent as CifLogo } from '../assets/logo.svg'
 import { SpeciesFilter } from './SpeciesFilter'
-import { SharableUrlParameters, TreeApiFeatureCollection } from '../types/topLevelAppTypes'
-import { Municipalities, Provinces } from '../types/locationsFilterTypes'
-import { Loader } from './Loader'
+import { themeMui } from '../globalStyles/themeMui'
 
 const SideBarWrapper = styled('div')`
   padding: ${themeMui.spacing(3)};
@@ -22,20 +26,20 @@ const StyledTreeCount = styled('div')`
   margin-bottom: ${themeMui.spacing(5)};
 `
 interface SidebarProps {
-  trees: TreeApiFeatureCollection
-  searchParameters: SharableUrlParameters
-  setSearchParametersAndUpdateTrees: (urlParamaters: SharableUrlParameters) => void
-  provinces: Provinces
-  municipalities: Municipalities
+  clearSearchParameterTypeAndUpdateTrees: (paramName: string) => void
   isDataInitializing: boolean
+  municipalities: Municipalities
+  provinces: Provinces
+  setSearchParametersAndUpdateTrees: (props: SetSearchParametersAndUpdateTreesProps) => void
+  trees: TreeApiFeatureCollection
 }
 export function Sidebar({
+  clearSearchParameterTypeAndUpdateTrees,
+  isDataInitializing,
   municipalities,
   provinces,
-  searchParameters,
   setSearchParametersAndUpdateTrees,
   trees,
-  isDataInitializing,
 }: SidebarProps) {
   const treeCount = trees?.features?.length
 
@@ -53,13 +57,13 @@ export function Sidebar({
           </StyledTreeCount>
 
           <LocationsFilter
-            provinces={provinces}
+            clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
             municipalities={municipalities}
+            provinces={provinces}
             setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
-            searchParameters={searchParameters}
           />
           <SpeciesFilter
-            searchParameters={searchParameters}
+            clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
             setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
           />
         </>

@@ -13,12 +13,16 @@ import maplibregl, { LngLatBounds } from 'maplibre-gl'
 
 import { basemapStyle } from './basemapStyle'
 import { INITIAL_VIEW_STATE } from '../../constants'
-import { SharableUrlParameters, TreeApiFeatureCollection } from '../../types/topLevelAppTypes'
+import {
+  SetSearchParametersAndUpdateTreesProps,
+  SharableUrlParameters,
+  TreeApiFeatureCollection,
+} from '../../types/topLevelAppTypes'
 import { clusteredTreeLayer, treeCountLayer, unclusteredTreeLayer } from './mapLayers'
 
 export interface CifMapProps {
   searchParameters: SharableUrlParameters
-  setSearchParametersAndUpdateTrees: (urlParamaters: SharableUrlParameters) => void
+  setSearchParametersAndUpdateTrees: (props: SetSearchParametersAndUpdateTreesProps) => void
   trees: TreeApiFeatureCollection
   updateTrees: () => void
 }
@@ -37,11 +41,13 @@ export function Map({
     const max_lat = mapBounds.getNorth().toFixed(4)
     const max_lng = mapBounds.getEast().toFixed(4)
     setSearchParametersAndUpdateTrees({
-      min_lat,
-      min_lng,
-      max_lat,
-      max_lng,
-    } as SharableUrlParameters)
+      newParameters: {
+        min_lat,
+        min_lng,
+        max_lat,
+        max_lng,
+      } as SharableUrlParameters,
+    })
   }
 
   const updateInitialMapExtentIfExtentParametersExistInUrl = (event: MapboxEvent) => {
@@ -76,10 +82,12 @@ export function Map({
       const clusterId = features[0]?.properties?.cluster_id
       map
         .getSource('trees')
+        // @ts-ignore
         .getClusterExpansionZoom(clusterId, (error: any, zoom: number | undefined) => {
           if (error) return
 
           map.easeTo({
+            // @ts-ignore
             center: features[0].geometry.coordinates,
             zoom,
           })
