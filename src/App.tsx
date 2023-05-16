@@ -1,5 +1,5 @@
 import { CircularProgress, Snackbar, ThemeProvider } from '@mui/material'
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 import styled from '@emotion/styled'
@@ -26,12 +26,12 @@ export function App() {
     type: 'FeatureCollection',
     features: [],
   })
-  const [searchParameters, setSearchParameters] = useSearchParams()
-  const [provinces, setProvinces] = useState<string[]>([])
-  const [municipalities, setMunicipalities] = useState<Municipalities>({})
   const [areLocationOptionsLoading, setAreLocationOptionsLoading] = useState(true)
-  const isDataInitializing = areLocationOptionsLoading
   const [isTreeDataLoading, setIsTreeDataLoading] = useState(false)
+  const [municipalities, setMunicipalities] = useState<Municipalities>({})
+  const [provinces, setProvinces] = useState<string[]>([])
+  const [, setSearchParameters] = useSearchParams()
+  const isDataInitializing = areLocationOptionsLoading
 
   useEffect(function loadLocationsOptions() {
     const locationsOptionsUrl = `${
@@ -52,11 +52,12 @@ export function App() {
       })
   }, [])
 
-  const updateTrees = useCallback(() => {
+  const updateTrees = () => {
     setIsTreeDataLoading(true)
-    const treeApiUrl = `${
-      import.meta.env.VITE_CIF_URBAN_FOREST_API
-    }/trees/search?${searchParameters.toString()}`
+    // we cant trust react router dom's searchParams state, so we grab query parms from window
+    const treeApiUrl = `${import.meta.env.VITE_CIF_URBAN_FOREST_API}/trees/search?${
+      window.location.search
+    }`
 
     axios
       .get(treeApiUrl)
@@ -68,37 +69,69 @@ export function App() {
         setIsTreeDataLoading(false)
         alert('we will handle errors later. This is a placeholder')
       })
-  }, [searchParameters])
+  }
 
-  const setSearchParametersAndUpdateTrees = useCallback(
-    (newParameters: SharableUrlParameters) => {
-      const existingUrlParameters = Object.fromEntries(searchParameters.entries())
-      const updatedUrlParameters = {
-        ...existingUrlParameters,
-        ...newParameters,
-      } as SharableUrlParameters
+  const clearSearchParameterTypeAndUpdateTrees = (paramName: string) => {
+    // we cant trust react router's searchParams state,
+    // so we grab url params from window
+    const newSearchParameters = new URLSearchParams(window.location.search)
+    newSearchParameters.delete(paramName)
+    // react router's setSearchParams still works and is used
+    // because it doesnt cacuse the app to refresh like writing
+    //  to window.location.search would
+    setSearchParameters(newSearchParameters)
+    updateTrees()
+  }
 
-      setSearchParameters(updatedUrlParameters)
+  const setSearchParametersAndUpdateTrees = (newParameters: SharableUrlParameters) => {
+    // we cant trust react router's searchParams state,
+    // so we grab url params from window
+    const existingSearchParameters = new URLSearchParams(window.location.search)
 
-      updateTrees()
-    },
-    [searchParameters, setSearchParameters, updateTrees],
-  )
+    const minLatToUse = newParameters.min_lat || existingSearchParameters.get('min_lat')
+    const minLngToUse = newParameters.min_lng || existingSearchParameters.get('min_lng')
+    const maxLatToUse = newParameters.max_lat || existingSearchParameters.get('max_lat')
+    const maxLngToUse = newParameters.max_lng || existingSearchParameters.get('max_lng')
+    const areAnyExtentValuesMissing = !minLatToUse || !minLngToUse || !maxLatToUse || !maxLngToUse
+    const extentParameters = areAnyExtentValuesMissing
+      ? null
+      : {
+          min_lat: minLatToUse,
+          min_lng: minLngToUse,
+          max_lat: maxLatToUse,
+          max_lng: maxLngToUse,
+        }
+
+    const updatedUrlParameters = {
+      ...extentParameters,
+      city: newParameters.city?.length
+        ? newParameters.city
+        : existingSearchParameters.getAll('city'),
+      common_genus: newParameters.common_genus?.length
+        ? newParameters.common_genus
+        : existingSearchParameters.getAll('common_genus'),
+    } as SharableUrlParameters
+    // react router's setSearchParams still works and is used because
+    // it doesnt cacuse the app to refresh like writing
+    // to window.location.search would
+    setSearchParameters(updatedUrlParameters, { replace: true })
+
+    updateTrees()
+  }
 
   const sideBar = (
     <Sidebar
       trees={trees}
-      searchParameters={searchParameters}
       setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
       provinces={provinces}
       municipalities={municipalities}
       isDataInitializing={isDataInitializing}
+      clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
     />
   )
   const map = (
     <Map
       updateTrees={updateTrees}
-      searchParameters={searchParameters}
       setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
       trees={trees}
     />

@@ -4,7 +4,7 @@ import { SyntheticEvent, useState } from 'react'
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 import { CifFormControlLabel } from './customMuiFormComponents'
 import { RowAlignItemsCenter } from './containers'
-import { SharableUrlParameters } from '../types/topLevelAppTypes'
+import { SetSearchParametersAndUpdateTrees, SharableUrlParameters } from '../types/topLevelAppTypes'
 
 interface SpeciesSingular {
   label: string
@@ -63,13 +63,13 @@ const OptionLabelWithTooltip = function OptionLabelWithTooltip({
 }
 
 interface SpeciesFilterProps {
-  searchParameters: SharableUrlParameters
-  setSearchParametersAndUpdateTrees: (urlParamaters: SharableUrlParameters) => void
+  setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
+  clearSearchParameterTypeAndUpdateTrees: (paramName: string) => void
 }
 
 export function SpeciesFilter({
-  searchParameters,
   setSearchParametersAndUpdateTrees,
+  clearSearchParameterTypeAndUpdateTrees,
 }: SpeciesFilterProps) {
   const [isSpeciesFilterExpanded, setIsSpeciesFilterExpanded] = useState(false)
   const [selectedValues, setSelectedValues] = useState<SpeciesSingular[]>([])
@@ -90,20 +90,12 @@ export function SpeciesFilter({
     const areSpeciesSelected = !!value.length
 
     if (!areSpeciesSelected) {
-      searchParameters.delete('common_genus')
-      const existingUrlParametersWithGenusDeleted = Object.fromEntries(searchParameters.entries())
-      setSearchParametersAndUpdateTrees({
-        ...existingUrlParametersWithGenusDeleted,
-      } as unknown as SharableUrlParameters)
+      clearSearchParameterTypeAndUpdateTrees('common_genus')
 
       return
     }
-
-    const existingUrlParameters = Object.fromEntries(searchParameters.entries())
-
     const genusLabels = value.map(({ label }) => label)
     setSearchParametersAndUpdateTrees({
-      ...existingUrlParameters,
       common_genus: genusLabels,
     } as SharableUrlParameters)
   }

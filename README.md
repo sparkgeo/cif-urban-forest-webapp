@@ -7,10 +7,6 @@ Think of this template more as a list of things to consider. Feel free to change
 - Also list relevant project links (eg to issue board, UX documents)
 - Who to talk to about what (Current team and roles)
 
-## Usage
-
-- eg link to comprehensive API docs, CLI commands and examples.
-
 ## Setting Up and Running a Development Environment
 
 - clone this repo
@@ -32,6 +28,8 @@ Think of this template more as a list of things to consider. Feel free to change
 - list any exceptions to above
 
 ## Architectural Decisions and Tradeoffs
+
+- React Router's `useSearchParams` hook provides `searchParams` state that is stale. Instead we get query parameters by reading `window.location.search` We still use the provided `setSearchParams` to update the url (writing to `window.location.search` would cause the app to reload).
 
 ## Testing
 

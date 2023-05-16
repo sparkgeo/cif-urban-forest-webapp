@@ -13,22 +13,20 @@ import maplibregl, { LngLatBounds } from 'maplibre-gl'
 
 import { basemapStyle } from './basemapStyle'
 import { INITIAL_VIEW_STATE } from '../../constants'
-import { SharableUrlParameters, TreeApiFeatureCollection } from '../../types/topLevelAppTypes'
+import {
+  SetSearchParametersAndUpdateTrees,
+  SharableUrlParameters,
+  TreeApiFeatureCollection,
+} from '../../types/topLevelAppTypes'
 import { clusteredTreeLayer, treeCountLayer, unclusteredTreeLayer } from './mapLayers'
 
 export interface CifMapProps {
-  searchParameters: SharableUrlParameters
-  setSearchParametersAndUpdateTrees: (urlParamaters: SharableUrlParameters) => void
+  setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
   trees: TreeApiFeatureCollection
   updateTrees: () => void
 }
 
-export function Map({
-  searchParameters,
-  setSearchParametersAndUpdateTrees,
-  trees,
-  updateTrees,
-}: CifMapProps) {
+export function Map({ setSearchParametersAndUpdateTrees, trees, updateTrees }: CifMapProps) {
   const updateUrlExtentParameters = (event: MapboxEvent | ViewStateChangeEvent) => {
     const mapBounds = event.target.getBounds()
 
@@ -45,7 +43,9 @@ export function Map({
   }
 
   const updateInitialMapExtentIfExtentParametersExistInUrl = (event: MapboxEvent) => {
-    const existingUrlParameters = Object.fromEntries(searchParameters.entries())
+    const existingUrlParameters = Object.fromEntries(
+      new URLSearchParams(window.location.search).entries(),
+    )
     const { min_lat: south, min_lng: west, max_lat: north, max_lng: east } = existingUrlParameters
 
     if (east && south && west && north) {
@@ -76,10 +76,12 @@ export function Map({
       const clusterId = features[0]?.properties?.cluster_id
       map
         .getSource('trees')
+        // @ts-ignore
         .getClusterExpansionZoom(clusterId, (error: any, zoom: number | undefined) => {
           if (error) return
 
           map.easeTo({
+            // @ts-ignore
             center: features[0].geometry.coordinates,
             zoom,
           })
