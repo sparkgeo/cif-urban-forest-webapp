@@ -88,7 +88,7 @@ export function LocationsFilter({
     }
 
     setSearchParametersAndUpdateTrees({
-      city: allMunicipalitiesNamesChecked,
+      cities: allMunicipalitiesNamesChecked,
     } as SharableUrlParameters)
   }
 

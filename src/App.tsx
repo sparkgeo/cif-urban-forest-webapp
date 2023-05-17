@@ -104,12 +104,12 @@ export function App() {
 
     const updatedUrlParameters = {
       ...extentParameters,
-      city: newParameters.city?.length
-        ? newParameters.city
-        : existingSearchParameters.getAll('city'),
-      common_genus: newParameters.common_genus?.length
-        ? newParameters.common_genus
-        : existingSearchParameters.getAll('common_genus'),
+      cities: newParameters.cities?.length
+        ? newParameters.cities
+        : existingSearchParameters.getAll('cities'),
+      common_species: newParameters.common_species?.length
+        ? newParameters.common_species
+        : existingSearchParameters.getAll('common_species'),
     } as SharableUrlParameters
     // react router's setSearchParams still works and is used because
     // it doesnt cacuse the app to refresh like writing

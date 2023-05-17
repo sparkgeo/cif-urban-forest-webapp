@@ -90,13 +90,13 @@ export function SpeciesFilter({
     const areSpeciesSelected = !!value.length
 
     if (!areSpeciesSelected) {
-      clearSearchParameterTypeAndUpdateTrees('common_genus')
+      clearSearchParameterTypeAndUpdateTrees('common_species')
 
       return
     }
-    const genusLabels = value.map(({ label }) => label)
+    const speciesLabels = value.map(({ label }) => label)
     setSearchParametersAndUpdateTrees({
-      common_genus: genusLabels,
+      common_species: speciesLabels,
     } as SharableUrlParameters)
   }
 
