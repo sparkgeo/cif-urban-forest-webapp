@@ -5,78 +5,79 @@ import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 import { CifFormControlLabel } from './customMuiFormComponents'
 import { RowAlignItemsCenter } from './containers'
 import { SetSearchParametersAndUpdateTrees, SharableUrlParameters } from '../types/topLevelAppTypes'
+import { CommonSpecies } from '../types/locationsFilterTypes'
 
-interface SpeciesSingular {
-  label: string
-  id: string | number
-}
+// interface SpeciesSingular {
+//   label: string
+//   id: string | number
+// }
 
-interface OtherSpeciesNames {
-  [key: string | number]: SpeciesSingular[]
-}
-interface SpeciesOptions {
-  masterSpeciesNames: SpeciesSingular[]
-  otherNames: OtherSpeciesNames
-}
-const speciesOptions: SpeciesOptions = {
-  masterSpeciesNames: [
-    { label: 'fir (placeholder)', id: '1' },
-    { label: 'hemlock (placeholder)', id: 2 },
-    { label: 'maple (placeholder)', id: 3 },
-  ],
-  otherNames: {
-    1: [
-      { label: 'a', id: 10 },
-      { label: 'b', id: 20 },
-    ],
-    3: [
-      { label: 'e', id: 30 },
-      { label: 'f', id: 40 },
-    ],
-  },
-}
-interface OptionLabelWithTooltipProps {
-  option: SpeciesSingular
-}
+// interface OtherSpeciesNames {
+//   [key: string | number]: SpeciesSingular[]
+// }
+// interface SpeciesOptions {
+//   masterSpeciesNames: SpeciesSingular[]
+//   otherNames: OtherSpeciesNames
+// }
+// const speciesOptions: SpeciesOptions = {
+//   masterSpeciesNames: [
+//     { label: 'fir (placeholder)', id: '1' },
+//     { label: 'hemlock (placeholder)', id: 2 },
+//     { label: 'maple (placeholder)', id: 3 },
+//   ],
+//   otherNames: {
+//     1: [
+//       { label: 'a', id: 10 },
+//       { label: 'b', id: 20 },
+//     ],
+//     3: [
+//       { label: 'e', id: 30 },
+//       { label: 'f', id: 40 },
+//     ],
+//   },
+// }
+// interface OptionLabelWithTooltipProps {
+//   option: SpeciesSingular
+// }
 
-const OptionLabelWithTooltip = function OptionLabelWithTooltip({
-  option,
-  ...restOfProps
-}: OptionLabelWithTooltipProps) {
-  const otherNames = speciesOptions.otherNames?.[option.id]?.length
-    ? speciesOptions.otherNames?.[option.id]
-    : null
+// const OptionLabelWithTooltip = function OptionLabelWithTooltip({
+//   option,
+//   ...restOfProps
+// }: OptionLabelWithTooltipProps) {
+//   const otherNames = null
 
-  const otherNamesList = otherNames ? (
-    <List>
-      {speciesOptions.otherNames?.[option.id]?.map(({ label, id }) => (
-        <ListItem key={id}>{label}</ListItem>
-      ))}
-    </List>
-  ) : null
+//   const otherNamesList = otherNames ? (
+//     <List>
+//       {/* {speciesOptions.otherNames?.[option.id]?.map(({ label, id }) => (
+//         <ListItem key={id}>{label}</ListItem>
+//       ))} */}
+//     </List>
+//   ) : null
 
-  return (
-    <Tooltip title={otherNamesList} placement="right" arrow>
-      <span {...restOfProps}>{option.label}</span>
-    </Tooltip>
-  )
-}
+//   return (
+//     <Tooltip title={otherNamesList} placement="right" arrow>
+//       <span {...restOfProps}>{option.label}</span>
+//     </Tooltip>
+//   )
+// }
 
 interface SpeciesFilterProps {
-  setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
   clearSearchParameterTypeAndUpdateTrees: (paramName: string) => void
+  commonSpecies: CommonSpecies
+  setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
 }
 
 export function SpeciesFilter({
-  setSearchParametersAndUpdateTrees,
   clearSearchParameterTypeAndUpdateTrees,
+  commonSpecies,
+  setSearchParametersAndUpdateTrees,
 }: SpeciesFilterProps) {
   const [isSpeciesFilterExpanded, setIsSpeciesFilterExpanded] = useState(false)
-  const [selectedValues, setSelectedValues] = useState<SpeciesSingular[]>([])
+  const [selectedValues, setSelectedValues] = useState<CommonSpecies>([])
 
   const isAnySpeciesSelected = !!selectedValues.length
   const isSpeciesCheckboxIndeterminate =
-    isAnySpeciesSelected && selectedValues.length < speciesOptions.masterSpeciesNames.length
+    isAnySpeciesSelected && selectedValues.length < commonSpecies.length
 
   const toggleIsSpeciesFilterExpanded = () => {
     setIsSpeciesFilterExpanded(!isSpeciesFilterExpanded)
@@ -84,19 +85,21 @@ export function SpeciesFilter({
 
   const handleSpeciesAutocompleteOnChange = (
     event: SyntheticEvent<Element, Event>,
-    value: SpeciesSingular[],
+    value: CommonSpecies,
   ) => {
-    setSelectedValues(value)
-    const areSpeciesSelected = !!value.length
+    const selectedSpecies = value
+
+    setSelectedValues(selectedSpecies)
+    const areSpeciesSelected = !!selectedSpecies.length
 
     if (!areSpeciesSelected) {
       clearSearchParameterTypeAndUpdateTrees('common_species')
 
       return
     }
-    const speciesLabels = value.map(({ label }) => label)
+
     setSearchParametersAndUpdateTrees({
-      common_species: speciesLabels,
+      common_species: selectedSpecies,
     } as SharableUrlParameters)
   }
 
@@ -121,9 +124,9 @@ export function SpeciesFilter({
       <Collapse in={isSpeciesFilterExpanded}>
         <Autocomplete
           multiple
-          options={speciesOptions.masterSpeciesNames}
-          getOptionLabel={(option) => option.label}
-          renderOption={(props, option) => <OptionLabelWithTooltip option={option} {...props} />}
+          options={commonSpecies}
+          getOptionLabel={(option) => option}
+          // renderOption={(props, option) => <OptionLabelWithTooltip option={option} {...props} />}
           renderInput={(params) => <TextField {...params} label="Species" />}
           onChange={handleSpeciesAutocompleteOnChange}
           value={selectedValues}

@@ -6,6 +6,8 @@ export interface Locations {
   provinces: Provinces
   municipalities: Municipalities
 }
+
+export type CommonSpecies = string[]
 export interface HandleProvinceCheckboxChangeProps {
   isChecked: boolean
   province: string

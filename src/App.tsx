@@ -9,7 +9,7 @@ import { Sidebar } from './components/SidebarLeft'
 import { themeMui } from './globalStyles/themeMui'
 import { SharableUrlParameters, TreeApiFeatureCollection } from './types/topLevelAppTypes'
 import { Map } from './components/Map/Map'
-import { Municipalities } from './types/locationsFilterTypes'
+import { CommonSpecies, Municipalities, Provinces } from './types/locationsFilterTypes'
 import { RowAlignItemsCenter } from './components/containers'
 
 const LoaderPaddingLeft = styled(CircularProgress)`
@@ -29,22 +29,22 @@ export function App() {
   const [areLocationOptionsLoading, setAreLocationOptionsLoading] = useState(true)
   const [isTreeDataLoading, setIsTreeDataLoading] = useState(false)
   const [municipalities, setMunicipalities] = useState<Municipalities>({})
-  const [provinces, setProvinces] = useState<string[]>([])
+  const [provinces, setProvinces] = useState<Provinces>([])
+  const [commmonSpecies, setCommonSpecies] = useState<CommonSpecies>([])
   const [, setSearchParameters] = useSearchParams()
   const isDataInitializing = areLocationOptionsLoading
 
   useEffect(function loadLocationsOptions() {
-    const locationsOptionsUrl = `${
-      import.meta.env.VITE_CIF_URBAN_FOREST_API
-    }/data/overview?provinces=True`
+    const locationsOptionsUrl = `${import.meta.env.VITE_CIF_URBAN_FOREST_API}/data/overview`
 
     axios
       .get(locationsOptionsUrl)
       .then(({ data }) => {
         setAreLocationOptionsLoading(false)
-        const { provinces: municipalitiesByProvince } = data
+        const { provinces: municipalitiesByProvince, common_species } = data
         setProvinces(Object.keys(municipalitiesByProvince))
         setMunicipalities(municipalitiesByProvince)
+        setCommonSpecies(common_species)
       })
       .catch((error) => {
         setAreLocationOptionsLoading(false)
@@ -121,12 +121,13 @@ export function App() {
 
   const sideBar = (
     <Sidebar
-      trees={trees}
-      setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
-      provinces={provinces}
-      municipalities={municipalities}
-      isDataInitializing={isDataInitializing}
       clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
+      commonSpecies={commmonSpecies}
+      isDataInitializing={isDataInitializing}
+      municipalities={municipalities}
+      provinces={provinces}
+      setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
+      trees={trees}
     />
   )
   const map = (

@@ -6,7 +6,7 @@ import {
 
 import { Loader } from './Loader'
 import { LocationsFilter } from './LocationsFilter'
-import { Municipalities, Provinces } from '../types/locationsFilterTypes'
+import { CommonSpecies, Municipalities, Provinces } from '../types/locationsFilterTypes'
 // @ts-ignore.
 import { ReactComponent as CifLogo } from '../assets/logo.svg'
 import { SpeciesFilter } from './SpeciesFilter'
@@ -27,6 +27,7 @@ const StyledTreeCount = styled('div')`
 `
 interface SidebarProps {
   clearSearchParameterTypeAndUpdateTrees: (paramName: string) => void
+  commonSpecies: CommonSpecies
   isDataInitializing: boolean
   municipalities: Municipalities
   provinces: Provinces
@@ -35,6 +36,7 @@ interface SidebarProps {
 }
 export function Sidebar({
   clearSearchParameterTypeAndUpdateTrees,
+  commonSpecies,
   isDataInitializing,
   municipalities,
   provinces,
@@ -65,6 +67,7 @@ export function Sidebar({
           <SpeciesFilter
             clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
             setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
+            commonSpecies={commonSpecies}
           />
         </>
       )}
