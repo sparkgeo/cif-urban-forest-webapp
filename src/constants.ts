@@ -3,3 +3,5 @@ export const INITIAL_VIEW_STATE = {
   latitude: 63,
   zoom: 3,
 }
+
+Object.freeze(INITIAL_VIEW_STATE)

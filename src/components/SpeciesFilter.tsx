@@ -1,5 +1,5 @@
 import { Autocomplete, Checkbox, Collapse, TextField } from '@mui/material'
-import { SyntheticEvent, useState } from 'react'
+import { SyntheticEvent, useEffect, useState } from 'react'
 
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 import { CifFormControlLabel } from './customMuiFormComponents'
@@ -78,6 +78,13 @@ export function SpeciesFilter({
   const isAnySpeciesSelected = !!selectedValues.length
   const isSpeciesCheckboxIndeterminate =
     isAnySpeciesSelected && selectedValues.length < commonSpecies.length
+
+  useEffect(function loadUrlParameterValuesIntoInitialFormState() {
+    const initialQueryParameters = new URLSearchParams(window.location.search)
+    const initialSpeciesQueryParameters = initialQueryParameters.getAll('common_species')
+
+    setSelectedValues(Array.from(initialSpeciesQueryParameters.values()))
+  }, [])
 
   const toggleIsSpeciesFilterExpanded = () => {
     setIsSpeciesFilterExpanded(!isSpeciesFilterExpanded)
