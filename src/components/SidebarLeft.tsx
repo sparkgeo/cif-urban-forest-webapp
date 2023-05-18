@@ -30,9 +30,20 @@ import { themeMui } from '../globalStyles/themeMui'
 
 const SideBarWrapper = styled('div')`
   padding: ${themeMui.spacing(3)};
-  width: 400px;
+  width: 425px;
+  overflow-y: auto;
+  direction: rtl;
+  scrollbar-width: thin;
+  height: 100vh;
+`
+const InnerSideBarWrapper = styled('div')`
   display: flex;
   flex-direction: column;
+  direction: ltr;
+  height: 100%;
+  & a > svg {
+    width: 100%;
+  }
 `
 const StyledCifLogo = styled(CifLogo)`
   margin-bottom: ${themeMui.spacing(5)};
@@ -101,38 +112,47 @@ export function Sidebar({
   }
 
   return (
-    <SideBarWrapper>
-      <a href="http://www.cif-ifc.org/" target="_blank" rel="noreferrer">
-        <StyledCifLogo alt="Canadian Institute of Forestry / Institude forestier du Canada Logo" />
-      </a>
-      {isDataInitializing ? (
-        <Loader />
-      ) : (
-        <>
-          <StyledTreeCount>
-            <div>{treeCount} trees shown</div>
-          </StyledTreeCount>
-          <DownloadForm>
-            <div>
-              <LocationsFilter
-                clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
-                municipalities={municipalities}
-                provinces={provinces}
-                setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
-              />
-              <SpeciesFilter
-                clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
-                setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
-                commonSpecies={commonSpecies}
-              />
-            </div>
+    <>
+      <SideBarWrapper>
+        <InnerSideBarWrapper>
+          <a href="http://www.cif-ifc.org/" target="_blank" rel="noreferrer">
+            <StyledCifLogo alt="Canadian Institute of Forestry / Institude forestier du Canada Logo" />
+          </a>
+          {isDataInitializing ? (
+            <Loader />
+          ) : (
+            <>
+              <StyledTreeCount>
+                <div>{treeCount} trees shown</div>
+              </StyledTreeCount>
+              <DownloadForm>
+                <div>
+                  <LocationsFilter
+                    clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
+                    municipalities={municipalities}
+                    provinces={provinces}
+                    setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
+                  />
+                  <SpeciesFilter
+                    clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
+                    setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
+                    commonSpecies={commonSpecies}
+                  />
+                </div>
 
-            <Button variant="contained" color="success" type="button" onClick={openDownloadModal}>
-              Download
-            </Button>
-          </DownloadForm>
-        </>
-      )}
+                <Button
+                  variant="contained"
+                  color="success"
+                  type="button"
+                  onClick={openDownloadModal}
+                >
+                  Download
+                </Button>
+              </DownloadForm>
+            </>
+          )}
+        </InnerSideBarWrapper>
+      </SideBarWrapper>
       <Dialog open={isDownloadModalOpen} onClose={closeDownloadModal}>
         <DialogContent sx={{ minWidth: 300 }}>
           <DialogTitle sx={{ paddingLeft: 0, paddingRight: 0 }}>
@@ -195,6 +215,6 @@ export function Sidebar({
           </Column>
         </DialogContent>
       </Dialog>
-    </SideBarWrapper>
+    </>
   )
 }
