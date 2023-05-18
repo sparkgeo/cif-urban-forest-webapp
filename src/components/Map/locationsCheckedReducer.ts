@@ -30,6 +30,39 @@ const toggleAllMunicipalitiesForProvince = ({
 
 export function locationsCheckedReducer(state: LocationsState, action: LocationsAction) {
   switch (action.type) {
+    case 'initializeStateFromUrlParameters': {
+      const { payload } = action
+      const { initialLocationQueryParameters, municipalities } = payload
+
+      const initialState: LocationsState = {}
+      const provinces = Object.keys(municipalities)
+
+      provinces.forEach((province) => {
+        initialState[province] = { municipalitiesChecked: [], isAnyMunicipalityChecked: false }
+        const provincialMunicipalities = municipalities[province]
+
+        provincialMunicipalities.forEach((municipality: string) => {
+          const isMunicipalityPresentInIntialUrlParameters =
+            initialLocationQueryParameters.includes(municipality)
+
+          if (isMunicipalityPresentInIntialUrlParameters) {
+            initialState[province].isAnyMunicipalityChecked = true
+          }
+          initialState[province].municipalitiesChecked?.push(
+            isMunicipalityPresentInIntialUrlParameters,
+          )
+        })
+
+        const provincialMunicipalitiesCheckedCount =
+          initialState[province].municipalitiesChecked?.length ?? 0
+
+        const areSomeButNotAllMunicipalitiesChecked =
+          provincialMunicipalitiesCheckedCount < municipalities[province].length
+        initialState[province].isProvinceIndeterminate = areSomeButNotAllMunicipalitiesChecked
+      })
+
+      return initialState
+    }
     case 'toggleAllMunicipalities': {
       let updatedState: LocationsState = state
       const { payload } = action

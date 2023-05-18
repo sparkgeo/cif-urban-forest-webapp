@@ -30,6 +30,7 @@ export interface LocationsState {
 
 export interface LocationsAction {
   type:
+    | 'initializeStateFromUrlParameters'
     | 'toggleAllMunicipalities'
     | 'toggleAllMunicipalitiesForProvince'
     | 'toggleMunicipalityChecked'

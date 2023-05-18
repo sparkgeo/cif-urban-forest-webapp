@@ -1,4 +1,4 @@
-import { ChangeEvent, Dispatch, useReducer, useState } from 'react'
+import { ChangeEvent, Dispatch, useEffect, useReducer, useState } from 'react'
 import { Checkbox, Collapse } from '@mui/material'
 
 import { CifFormControlLabel, CifList } from './customMuiFormComponents'
@@ -36,6 +36,19 @@ export function LocationsFilter({
     LocationsState,
     Dispatch<LocationsAction>,
   ] = useReducer(locationsCheckedReducer, intialLocationsState)
+
+  useEffect(
+    function loadUrlParameterValuesIntoInitialFormState() {
+      const initialQueryParameters = new URLSearchParams(window.location.search)
+      const initialLocationQueryParameters = initialQueryParameters.getAll('cities')
+
+      locationsCheckedDispatch({
+        type: 'initializeStateFromUrlParameters',
+        payload: { municipalities, initialLocationQueryParameters },
+      })
+    },
+    [locationsCheckedDispatch, municipalities],
+  )
 
   const alphebeticallySortedProvinces = [...provinces].sort()
 
@@ -82,7 +95,7 @@ export function LocationsFilter({
     const areLocationsSelected = !!allMunicipalitiesNamesChecked.length
 
     if (!areLocationsSelected) {
-      clearSearchParameterTypeAndUpdateTrees('city')
+      clearSearchParameterTypeAndUpdateTrees('cities')
 
       return
     }
