@@ -1,25 +1,11 @@
-import {
-  Button,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  FormControl,
-  FormControlLabel,
-  IconButton,
-  Radio,
-  RadioGroup,
-  styled,
-} from '@mui/material'
+import { Button, Dialog, styled } from '@mui/material'
 import { MouseEvent, SyntheticEvent, useState } from 'react'
-import { Download } from '@mui/icons-material'
-import CloseIcon from '@mui/icons-material/Close'
 
 import {
   SetSearchParametersAndUpdateTrees,
   TreeApiFeatureCollection,
 } from '../types/topLevelAppTypes'
 
-import { Column } from './containers'
 import { CommonSpecies, Municipalities, Provinces } from '../types/locationsFilterTypes'
 import { Loader } from './Loader'
 import { LocationsFilter } from './LocationsFilter'
@@ -27,6 +13,7 @@ import { LocationsFilter } from './LocationsFilter'
 import { ReactComponent as CifLogo } from '../assets/logo.svg'
 import { SpeciesFilter } from './SpeciesFilter'
 import { themeMui } from '../globalStyles/themeMui'
+import { DownloadModalContent } from './DownloadModalContent'
 
 const SideBarWrapper = styled('div')`
   padding: ${themeMui.spacing(3)};
@@ -82,9 +69,27 @@ export function Sidebar({
 }: SidebarProps) {
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState<boolean>(false)
   const [fileType, setFileType] = useState<string>('csv')
+  const [isAnyFilterSelected, setIsAnyFilterSelected] = useState<boolean>(false)
   const treeCount = trees?.features?.length
 
+  const getFilterSearchParameters = () => {
+    const filterSearchParams = new URLSearchParams(window.location.search)
+    filterSearchParams.delete('min_lat')
+    filterSearchParams.delete('min_lng')
+    filterSearchParams.delete('max_lat')
+    filterSearchParams.delete('max_lng')
+
+    return filterSearchParams
+  }
+
+  const setFilterSelectedStatus = () => {
+    const filterSearchParams = getFilterSearchParameters()
+    // @ts-ignore
+    setIsAnyFilterSelected(!!filterSearchParams.size)
+  }
+
   const openDownloadModal = () => {
+    setFilterSelectedStatus()
     setIsDownloadModalOpen(true)
   }
 
@@ -98,11 +103,7 @@ export function Sidebar({
 
   const setDownloadLinkHref = (event: MouseEvent<HTMLAnchorElement>) => {
     const downloadLink = event.currentTarget
-    const filterSearchParams = new URLSearchParams(window.location.search)
-    filterSearchParams.delete('min_lat')
-    filterSearchParams.delete('min_lng')
-    filterSearchParams.delete('max_lat')
-    filterSearchParams.delete('max_lng')
+    const filterSearchParams = getFilterSearchParameters()
 
     const treeApiUrl = `${
       import.meta.env.VITE_CIF_URBAN_FOREST_API
@@ -154,66 +155,13 @@ export function Sidebar({
         </InnerSideBarWrapper>
       </SideBarWrapper>
       <Dialog open={isDownloadModalOpen} onClose={closeDownloadModal}>
-        <DialogContent sx={{ minWidth: 300 }}>
-          <DialogTitle sx={{ paddingLeft: 0, paddingRight: 0 }}>
-            Select file type
-            <IconButton
-              aria-label="close"
-              onClick={closeDownloadModal}
-              sx={{
-                position: 'absolute',
-                right: 8,
-                top: 8,
-                color: (theme) => theme.palette.grey[500],
-              }}
-            >
-              <CloseIcon />
-            </IconButton>
-          </DialogTitle>
-          <Column as="form">
-            <FormControl>
-              <RadioGroup
-                aria-labelledby="demo-radio-buttons-group-label"
-                name="radio-buttons-group"
-              >
-                <FormControlLabel
-                  value="csv"
-                  control={<Radio checked={fileType === 'csv'} />}
-                  label=".csv"
-                  onChange={handleFileTypeChange}
-                />
-                <FormControlLabel
-                  value="json"
-                  control={<Radio checked={fileType === 'json'} />}
-                  label=".json"
-                  onChange={handleFileTypeChange}
-                />
-                <FormControlLabel
-                  value="shp"
-                  control={<Radio checked={fileType === 'shp'} />}
-                  label=".shp"
-                  onChange={handleFileTypeChange}
-                />
-              </RadioGroup>
-            </FormControl>
-            <Button
-              variant="contained"
-              color="success"
-              type="button"
-              href="#"
-              onClick={setDownloadLinkHref}
-              download
-              sx={{ marginTop: themeMui.spacing(2) }}
-            >
-              <Download
-                sx={{
-                  marginRight: themeMui.spacing(0.5),
-                }}
-              />
-              Download
-            </Button>
-          </Column>
-        </DialogContent>
+        <DownloadModalContent
+          closeDownloadModal={closeDownloadModal}
+          fileType={fileType}
+          handleFileTypeChange={handleFileTypeChange}
+          isAnyFilterSelected={isAnyFilterSelected}
+          setDownloadLinkHref={setDownloadLinkHref}
+        />
       </Dialog>
     </>
   )
