@@ -16,6 +16,6 @@ const color = {
 const border = { radius: '4px' }
 
 const typography = {
-  fontStack: ['Open Sans', 'sans-serif'],
+  fontStack: ['Roboto', 'Open Sans', 'sans-serif'],
 }
 export const theme = { color, typography, border }
