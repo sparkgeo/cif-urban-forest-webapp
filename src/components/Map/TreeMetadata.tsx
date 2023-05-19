@@ -14,7 +14,7 @@ const TreeMetadataTable = styled('table')`
     padding-right: 0.5em;
     width: 155px;
   }
-  & tr:nth-child(odd) {
+  & tr:nth-of-type(odd) {
     background-color: ${theme.color.grey[50]};
     border: solid thin black;
   }

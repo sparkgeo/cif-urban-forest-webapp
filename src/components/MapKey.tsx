@@ -70,11 +70,11 @@ const tooltipContent = (
     <p>Tree Density</p>
     <dl>
       <dt>High:</dt>
-      <dd>classification buckets tbd</dd>
+      <dd>751+ trees</dd>
       <dt>Med:</dt>
-      <dd>classification buckets tbd</dd>
+      <dd>51 - 750 trees</dd>
       <dt>Low:</dt>
-      <dd>classification buckets tbd</dd>
+      <dd>2 - 50 trees</dd>
     </dl>
   </ToolTipContentWrapper>
 )
