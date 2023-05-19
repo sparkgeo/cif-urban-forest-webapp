@@ -6,9 +6,6 @@ import { theme } from '../globalStyles/theme'
 import { themeMui } from '../globalStyles/themeMui'
 
 const MapKeyWrapper = styled('div')`
-  position: absolute;
-  bottom: ${themeMui.spacing(5)};
-  right: ${themeMui.spacing(2)};
   border-radius: ${theme.border.radius};
   display: flex;
   flex-direction: column;

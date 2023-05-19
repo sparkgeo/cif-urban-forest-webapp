@@ -11,6 +11,7 @@ const color = {
   grey: {
     50: '#fafafa',
   },
+  text: { primary: '#000000', secondary: '#00000099' },
 }
 
 const border = { radius: '4px' }
