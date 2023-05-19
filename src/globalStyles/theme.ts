@@ -1,6 +1,6 @@
 const color = {
-  primary: '#2596be',
-  secondary: '#eab676',
+  primary: '#1C874B',
+  secondary: '#1A5632',
   treeDensity: {
     high: '#FF875C',
     medium: '#78CF98',
