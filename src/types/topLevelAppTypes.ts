@@ -24,6 +24,5 @@ export interface TreeProperties {
 export interface TreeApiFeatureCollection extends FeatureCollection {
   limit?: number
   count?: number
-  properties: TreeProperties
 }
 export type SetSearchParametersAndUpdateTrees = (newParameters: SharableUrlParameters) => void
