@@ -5,20 +5,24 @@ import ReactMapGl, {
   MapboxEvent,
   MapboxGeoJSONFeature,
   MapboxMap,
+  Popup,
   Source,
   ViewStateChangeEvent,
 } from 'react-map-gl'
 
 import maplibregl, { LngLatBounds } from 'maplibre-gl'
 
+import { useState } from 'react'
 import { basemapStyle } from './basemapStyle'
 import { INITIAL_VIEW_STATE } from '../../constants'
 import {
   SetSearchParametersAndUpdateTrees,
   SharableUrlParameters,
   TreeApiFeatureCollection,
+  TreeProperties,
 } from '../../types/topLevelAppTypes'
 import { clusteredTreeLayer, treeCountLayer, unclusteredTreeLayer } from './mapLayers'
+import { TreeMetadata } from './TreeMetadata'
 
 export interface CifMapProps {
   setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
@@ -26,7 +30,17 @@ export interface CifMapProps {
   updateTrees: () => void
 }
 
+interface PopupInfo {
+  lngLat: GeoJSON.Position
+  content: JSX.Element
+}
+
 export function Map({ setSearchParametersAndUpdateTrees, trees, updateTrees }: CifMapProps) {
+  const [popupInfo, setPopupInfo] = useState<PopupInfo | null>(null)
+  const closePopup = () => {
+    setPopupInfo(null)
+  }
+
   const updateUrlExtentParameters = (event: MapboxEvent | ViewStateChangeEvent) => {
     const mapBounds = event.target.getBounds()
 
@@ -90,8 +104,30 @@ export function Map({ setSearchParametersAndUpdateTrees, trees, updateTrees }: C
     map.on('mouseenter', 'tree-clusters', () => {
       map.getCanvas().style.cursor = 'pointer'
     })
+    map.on('mouseenter', 'unclustered-trees', () => {
+      map.getCanvas().style.cursor = 'pointer'
+    })
     map.on('mouseleave', 'tree-clusters', () => {
       map.getCanvas().style.cursor = ''
+    })
+    map.on('mouseleave', 'unclustered-trees', () => {
+      map.getCanvas().style.cursor = ''
+    })
+    map.on('click', 'unclustered-trees', (unclusteredTreeClickEvent: MapLayerMouseEvent) => {
+      const treesAssociatedWithClick = unclusteredTreeClickEvent.features || []
+      const isThereATreeAssociatedWithClick = treesAssociatedWithClick.length > 0
+
+      if (isThereATreeAssociatedWithClick) {
+        const treeAssociatedWithClick = treesAssociatedWithClick[0]
+        const treeGeometry = treeAssociatedWithClick?.geometry as GeoJSON.Point
+
+        setPopupInfo({
+          lngLat: treeGeometry.coordinates,
+          content: (
+            <TreeMetadata treeProperties={treeAssociatedWithClick.properties as TreeProperties} />
+          ),
+        })
+      }
     })
   }
   return (
@@ -102,12 +138,24 @@ export function Map({ setSearchParametersAndUpdateTrees, trees, updateTrees }: C
       mapLib={maplibregl}
       mapStyle={basemapStyle}
       onLoad={handleOnLoad}
+      interactiveLayerIds={[unclusteredTreeLayer.id!]}
     >
       <Source id="trees" type="geojson" data={trees} cluster clusterMaxZoom={14} clusterRadius={50}>
         <Layer {...clusteredTreeLayer} />
         <Layer {...treeCountLayer} />
         <Layer {...unclusteredTreeLayer} />
       </Source>
+
+      {popupInfo ? (
+        <Popup
+          longitude={popupInfo.lngLat[0]}
+          latitude={popupInfo.lngLat[1]}
+          onClose={closePopup}
+          style={{ maxWidth: 'none', padding: 0 }}
+        >
+          {popupInfo.content}
+        </Popup>
+      ) : null}
     </ReactMapGl>
   )
 }

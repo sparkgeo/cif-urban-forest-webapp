@@ -8,6 +8,9 @@ const color = {
   },
   charcoal: '#393e49',
   white: '#ffffff',
+  grey: {
+    50: '#fafafa',
+  },
 }
 
 const border = { radius: '4px' }

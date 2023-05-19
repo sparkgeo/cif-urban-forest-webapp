@@ -33,7 +33,7 @@ export const treeCountLayer: LayerProps = {
 }
 
 export const unclusteredTreeLayer: LayerProps = {
-  id: 'unclustered-tree',
+  id: 'unclustered-trees',
   type: 'circle',
   source: 'trees',
   filter: ['!', ['has', 'point_count']],
