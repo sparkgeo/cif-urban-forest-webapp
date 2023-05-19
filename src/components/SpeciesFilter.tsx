@@ -134,7 +134,7 @@ export function SpeciesFilter({
           options={commonSpecies}
           getOptionLabel={(option) => option}
           // renderOption={(props, option) => <OptionLabelWithTooltip option={option} {...props} />}
-          renderInput={(params) => <TextField {...params} label="Species" />}
+          renderInput={(params) => <TextField {...params} />}
           onChange={handleSpeciesAutocompleteOnChange}
           value={selectedValues}
           filterSelectedOptions
