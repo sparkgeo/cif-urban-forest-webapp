@@ -5,6 +5,7 @@ import ReactMapGl, {
   MapboxEvent,
   MapboxGeoJSONFeature,
   MapboxMap,
+  NavigationControl,
   Popup,
   Source,
   ViewStateChangeEvent,
@@ -140,12 +141,12 @@ export function Map({ setSearchParametersAndUpdateTrees, trees, updateTrees }: C
       onLoad={handleOnLoad}
       interactiveLayerIds={[unclusteredTreeLayer.id!]}
     >
+      <NavigationControl showCompass={false} />
       <Source id="trees" type="geojson" data={trees} cluster clusterMaxZoom={14} clusterRadius={50}>
         <Layer {...clusteredTreeLayer} />
         <Layer {...treeCountLayer} />
         <Layer {...unclusteredTreeLayer} />
       </Source>
-
       {popupInfo ? (
         <Popup
           longitude={popupInfo.lngLat[0]}
