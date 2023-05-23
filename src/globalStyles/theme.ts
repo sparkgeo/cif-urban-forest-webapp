@@ -1,5 +1,6 @@
 const color = {
   primary: '#1C874B',
+  primary8Percent: '#1C874B14',
   secondary: '#1A5632',
   treeDensity: {
     high: '#FF875C',

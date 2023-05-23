@@ -7,12 +7,17 @@ import {
   ListProps,
   styled,
 } from '@mui/material'
+import { theme } from '../globalStyles/theme'
 
 const CustomStyleFormControlLabel = styled(FormControlLabel)`
   margin: 0;
   display: flex;
   justify-content: space-between;
   width: 100%;
+  &:focus-within,
+  &:hover {
+    background-color: ${theme.color.primary8Percent};
+  }
 `
 
 const CustomStyleListItem = styled(ListItem)`
