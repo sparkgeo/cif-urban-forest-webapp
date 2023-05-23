@@ -22,6 +22,7 @@ const Main = styled('main')`
 const MapLowerRightFloater = styled('div')`
   display: flex;
   position: absolute;
+  align-items: flex-end;
   bottom: ${themeMui.spacing(5)};
   right: ${themeMui.spacing(2)};
 `
