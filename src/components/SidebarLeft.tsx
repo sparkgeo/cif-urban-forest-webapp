@@ -146,6 +146,8 @@ export function Sidebar({
                   color="success"
                   type="button"
                   onClick={openDownloadModal}
+                  disableElevation
+                  size="large"
                 >
                   Download
                 </Button>
