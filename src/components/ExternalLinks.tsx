@@ -1,21 +1,29 @@
 import styled from '@emotion/styled'
-import { Button } from '@mui/material'
+import { Button, ButtonProps } from '@mui/material'
 
 import { theme } from '../globalStyles/theme'
 import { themeMui } from '../globalStyles/themeMui'
 
-const ExternalLink = styled(Button)`
+const ButtonLink = styled(Button)`
   background-color: ${theme.color.white};
   color: ${theme.color.text.secondary};
   margin-right: ${themeMui.spacing(3)};
-  box-shadow: ${themeMui.shadows[4]};
+  box-shadow: ${themeMui.shadows[5]};
   text-transform: uppercase;
+  border-radius: 100px;
   &:hover {
-    background-color: ${theme.color.white};
-    text-decoration: underline;
-    box-shadow: ${themeMui.shadows[8]};
+    background-color: #f5f5f5;
   }
 `
+
+function ExternalLink(props: ButtonProps) {
+  const { children, ...restOfProps } = props
+  return (
+    <ButtonLink size="medium" variant="contained" {...restOfProps}>
+      {children}
+    </ButtonLink>
+  )
+}
 
 export function ExternalLinks() {
   return (
