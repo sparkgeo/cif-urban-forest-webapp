@@ -70,7 +70,7 @@ export function Sidebar({
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState<boolean>(false)
   const [fileType, setFileType] = useState<string>('csv')
   const [isAnyFilterSelected, setIsAnyFilterSelected] = useState<boolean>(false)
-  const treeCount = trees?.features?.length
+  const treeCount = trees?.count
 
   const getFilterSearchParameters = () => {
     const filterSearchParams = new URLSearchParams(window.location.search)
@@ -123,9 +123,12 @@ export function Sidebar({
             <Loader />
           ) : (
             <>
-              <StyledTreeCount>
-                <div>{treeCount} trees shown</div>
-              </StyledTreeCount>
+              {treeCount ? (
+                <StyledTreeCount>
+                  <div>{new Intl.NumberFormat().format(treeCount)} trees shown</div>
+                </StyledTreeCount>
+              ) : null}
+
               <DownloadForm>
                 <div>
                   <LocationsFilter
