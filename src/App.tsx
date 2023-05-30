@@ -66,9 +66,11 @@ export function App() {
   const updateTrees = () => {
     setIsTreeDataLoading(true)
     // we cant trust react router dom's searchParams state, so we grab query parms from window
-    const treeApiUrl = `${import.meta.env.VITE_CIF_URBAN_FOREST_API}/trees/search${
-      window.location.search
-    }`
+    const treeSearchParams = new URLSearchParams(window.location.search)
+    treeSearchParams.append('count', 'true')
+    const treeApiUrl = `${
+      import.meta.env.VITE_CIF_URBAN_FOREST_API
+    }/trees/search?${treeSearchParams.toString()}`
 
     axios
       .get(treeApiUrl)
