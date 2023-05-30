@@ -33,6 +33,12 @@ export function App() {
   const [commmonSpecies, setCommonSpecies] = useState<CommonSpecies>([])
   const [, setSearchParameters] = useSearchParams()
   const isDataInitializing = areLocationOptionsLoading
+  const [errorText, setErrorText] = useState<string[]>([])
+  const clearErrorText = (errorTextToRemove: string) => {
+    setErrorText((currentErrorText) => {
+      return currentErrorText.filter((error) => error !== errorTextToRemove)
+    })
+  }
 
   useEffect(function loadLocationsOptions() {
     const locationsOptionsUrl = `${
@@ -48,9 +54,12 @@ export function App() {
         setMunicipalities(municipalitiesByProvince)
         setCommonSpecies(common_species)
       })
-      .catch((error) => {
+      .catch(() => {
         setAreLocationOptionsLoading(false)
-        alert(error)
+        setErrorText((currentErrorText) => [
+          ...currentErrorText,
+          'Unable to initialize filter options for locations or species. Please try refreshing the webpage',
+        ])
       })
   }, [])
 
@@ -69,7 +78,10 @@ export function App() {
       })
       .catch(() => {
         setIsTreeDataLoading(false)
-        alert('we will handle errors later. This is a placeholder')
+        setErrorText((currentErrorText) => [
+          ...currentErrorText,
+          'Unable to query trees. Please try again.',
+        ])
       })
   }
 
@@ -155,7 +167,7 @@ export function App() {
           horizontal: 'right',
         }}
       />
-      <Layout sideBar={sideBar} map={map} />
+      <Layout sideBar={sideBar} map={map} errorText={errorText} clearErrorText={clearErrorText} />
     </ThemeProvider>
   )
 }
