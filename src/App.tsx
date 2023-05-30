@@ -35,7 +35,9 @@ export function App() {
   const isDataInitializing = areLocationOptionsLoading
 
   useEffect(function loadLocationsOptions() {
-    const locationsOptionsUrl = `${import.meta.env.VITE_CIF_URBAN_FOREST_API}/data/overview`
+    const locationsOptionsUrl = `${
+      import.meta.env.VITE_CIF_URBAN_FOREST_API
+    }/data/overview?common_species=True&provinces=True`
 
     axios
       .get(locationsOptionsUrl)
