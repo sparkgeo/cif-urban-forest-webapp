@@ -14,6 +14,7 @@ import { ReactComponent as CifLogo } from '../assets/logo.svg'
 import { SpeciesFilter } from './SpeciesFilter'
 import { themeMui } from '../globalStyles/themeMui'
 import { DownloadModalContent } from './DownloadModalContent'
+import { TreeDiameterFilter } from './TreeDiameterFilter'
 
 const SideBarWrapper = styled('div')`
   padding: ${themeMui.spacing(3)};
@@ -141,6 +142,10 @@ export function Sidebar({
                     clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
                     setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
                     commonSpecies={commonSpecies}
+                  />
+                  <TreeDiameterFilter
+                    clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
+                    setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
                   />
                 </div>
 

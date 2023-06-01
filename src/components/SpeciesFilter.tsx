@@ -130,6 +130,7 @@ export function SpeciesFilter({
       </RowAlignItemsCenter>
       <Collapse in={isSpeciesFilterExpanded}>
         <Autocomplete
+          sx={{ marginLeft: '24px' }}
           multiple
           options={commonSpecies}
           getOptionLabel={(option) => option}

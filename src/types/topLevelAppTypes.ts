@@ -7,6 +7,8 @@ export interface SharableUrlParameters extends URLSearchParams {
   max_lng?: string
   common_species?: string[]
   cities?: string[]
+  max_dbh?: string
+  min_dbh?: string
 }
 
 export interface TreeProperties {
