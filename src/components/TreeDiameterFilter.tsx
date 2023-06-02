@@ -2,7 +2,7 @@ import { Checkbox, Collapse, TextField } from '@mui/material'
 import { ChangeEvent, useEffect, useState } from 'react'
 
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
-import { CifFormControlLabel, CifFormControlLabelIndented } from './customMuiFormComponents'
+import { CifLabel, CifLabelIndented } from './customMuiFormComponents'
 import { RowAlignItemsCenter } from './containers'
 import { SetSearchParametersAndUpdateTrees, SharableUrlParameters } from '../types/topLevelAppTypes'
 
@@ -69,33 +69,23 @@ export function TreeDiameterFilter({
           onClick={toggleIsTreeDiameterFilterExpanded}
           isExpanded={isTreeDiameterFilterExpanded}
         />
-        <CifFormControlLabel
-          label="Tree Diameter (DBH)"
-          control={<Checkbox checked={isAnyValueForAnySize} />}
-        />
+        <CifLabel>Tree Diameter (DBH)</CifLabel>
+        <Checkbox checked={isAnyValueForAnySize} />
       </RowAlignItemsCenter>
       <Collapse in={isTreeDiameterFilterExpanded}>
-        <CifFormControlLabelIndented
-          label="Min Size (cm)"
-          control={
-            <TextField
-              inputProps={{ min: 0 }}
-              onChange={handleMinSizeChange}
-              type="number"
-              value={minTreeDiameter}
-            />
-          }
+        <CifLabelIndented>Min Size (cm)</CifLabelIndented>
+        <TextField
+          inputProps={{ min: 0 }}
+          onChange={handleMinSizeChange}
+          type="number"
+          value={minTreeDiameter}
         />
-        <CifFormControlLabelIndented
-          label="Max Size (cm)"
-          control={
-            <TextField
-              inputProps={{ min: 0 }}
-              onChange={handleMaxSizeChange}
-              type="number"
-              value={maxTreeDiameter}
-            />
-          }
+        <CifLabelIndented>Max Size (cm)</CifLabelIndented>
+        <TextField
+          inputProps={{ min: 0 }}
+          onChange={handleMaxSizeChange}
+          type="number"
+          value={maxTreeDiameter}
         />
       </Collapse>
     </>

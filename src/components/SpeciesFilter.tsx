@@ -2,11 +2,10 @@ import { Autocomplete, Checkbox, Collapse, TextField } from '@mui/material'
 import { SyntheticEvent, useEffect, useState } from 'react'
 
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
-import { CifFormControlLabel } from './customMuiFormComponents'
+import { CifLabel } from './customMuiFormComponents'
 import { RowAlignItemsCenter } from './containers'
 import { SetSearchParametersAndUpdateTrees, SharableUrlParameters } from '../types/topLevelAppTypes'
 import { CommonSpecies } from '../types/locationsFilterTypes'
-import { json } from 'react-router-dom'
 
 // interface SpeciesSingular {
 //   label: string
@@ -121,15 +120,11 @@ export function SpeciesFilter({
           onClick={toggleIsSpeciesFilterExpanded}
           isExpanded={isSpeciesFilterExpanded}
         />
-        <CifFormControlLabel
-          label="Tree Species"
-          control={
-            <Checkbox
-              checked={isAnySpeciesSelected}
-              indeterminate={isSpeciesCheckboxIndeterminate}
-              onClick={toggleIsSpeciesFilterExpanded}
-            />
-          }
+        <CifLabel>Tree Species</CifLabel>
+        <Checkbox
+          checked={isAnySpeciesSelected}
+          indeterminate={isSpeciesCheckboxIndeterminate}
+          onClick={toggleIsSpeciesFilterExpanded}
         />
       </RowAlignItemsCenter>
       <Collapse in={isSpeciesFilterExpanded}>

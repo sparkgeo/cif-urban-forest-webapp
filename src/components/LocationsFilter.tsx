@@ -1,7 +1,7 @@
 import { ChangeEvent, Dispatch, useEffect, useReducer, useState } from 'react'
 import { Checkbox, Collapse } from '@mui/material'
 
-import { CifFormControlLabel, CifList } from './customMuiFormComponents'
+import { CifLabel, CifList } from './customMuiFormComponents'
 import { locationsCheckedReducer } from './Map/locationsCheckedReducer'
 import { ProvincesFilter } from './ProvincesFilter'
 import {
@@ -189,15 +189,11 @@ export function LocationsFilter({
           onClick={toggleIsLocationsFilterExpanded}
           isExpanded={isLocationsFilterExpanded}
         />
-        <CifFormControlLabel
-          label="Locations"
-          control={
-            <Checkbox
-              checked={isAnyMunicipalityChecked}
-              indeterminate={isLocationsIndeterminate}
-              onChange={handleLocationCheckboxChange}
-            />
-          }
+        <CifLabel>Locations</CifLabel>
+        <Checkbox
+          checked={isAnyMunicipalityChecked}
+          indeterminate={isLocationsIndeterminate}
+          onChange={handleLocationCheckboxChange}
         />
       </RowAlignItemsCenter>
       <Collapse in={isLocationsFilterExpanded}>{provinceCheckboxes}</Collapse>

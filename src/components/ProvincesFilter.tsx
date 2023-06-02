@@ -7,7 +7,7 @@ import {
   LocationsState,
   Municipalities,
 } from '../types/locationsFilterTypes'
-import { CifFormControlLabel, CifList, CifListItem } from './customMuiFormComponents'
+import { CifList, CifListItem, CifLabel } from './customMuiFormComponents'
 import { ColumnFullWidth, RowAlignItemsCenter } from './containers'
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 
@@ -54,15 +54,11 @@ export function ProvincesFilter({
             isExpanded={areMunicipalitiyOptionsExpanded}
             onClick={expandCollapseMunicipalities}
           />
-          <CifFormControlLabel
-            label={province}
-            control={
-              <Checkbox
-                checked={isAnyProvincialMunicipalityChecked}
-                indeterminate={isProvinceIndeterminate}
-                onChange={handleProvinceCheckboxChangeOverride}
-              />
-            }
+          <CifLabel>{province}</CifLabel>
+          <Checkbox
+            checked={isAnyProvincialMunicipalityChecked}
+            indeterminate={isProvinceIndeterminate}
+            onChange={handleProvinceCheckboxChangeOverride}
           />
         </RowAlignItemsCenter>
 
@@ -76,20 +72,16 @@ export function ProvincesFilter({
                   ]
                 return (
                   <CifListItem key={municipality}>
-                    <CifFormControlLabel
-                      label={municipality}
-                      control={
-                        <Checkbox
-                          checked={isMunicipalityChecked}
-                          onChange={(event) => {
-                            handleMunicipalityCheckboxChange({
-                              municipalityDisplayIndex,
-                              province,
-                              isMunicipalityChecked: event.target.checked,
-                            })
-                          }}
-                        />
-                      }
+                    <CifLabel>{municipality}</CifLabel>
+                    <Checkbox
+                      checked={isMunicipalityChecked}
+                      onChange={(event) => {
+                        handleMunicipalityCheckboxChange({
+                          municipalityDisplayIndex,
+                          province,
+                          isMunicipalityChecked: event.target.checked,
+                        })
+                      }}
                     />
                   </CifListItem>
                 )
