@@ -3,9 +3,8 @@ const color = {
   primary8Percent: '#1C874B14',
   secondary: '#1A5632',
   treeDensity: {
-    high: '#FF875C',
-    medium: '#78CF98',
-    low: '#EBDB26',
+    fill: { high: '#FF875C', medium: '#78CF98', low: '#EBDB26' },
+    stroke: { high: '#FFA98B', low: '#F5EC95', medium: '#C5EAD2' },
   },
   charcoal: '#393e49',
   white: '#ffffff',

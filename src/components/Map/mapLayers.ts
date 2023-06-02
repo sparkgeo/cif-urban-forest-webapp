@@ -7,16 +7,26 @@ export const clusteredTreeLayer: LayerProps = {
   source: 'trees',
   filter: ['has', 'point_count'],
   paint: {
+    'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
+    'circle-stroke-width': 4,
     'circle-color': [
       'step',
       ['get', 'point_count'],
-      theme.color.treeDensity.low,
+      theme.color.treeDensity.fill.low,
       50,
-      theme.color.treeDensity.medium,
+      theme.color.treeDensity.fill.medium,
       750,
-      theme.color.treeDensity.high,
+      theme.color.treeDensity.fill.high,
     ],
-    'circle-radius': ['step', ['get', 'point_count'], 20, 100, 30, 750, 40],
+    'circle-stroke-color': [
+      'step',
+      ['get', 'point_count'],
+      theme.color.treeDensity.stroke.low,
+      50,
+      theme.color.treeDensity.stroke.medium,
+      750,
+      theme.color.treeDensity.stroke.high,
+    ],
   },
 }
 
