@@ -18,7 +18,7 @@ import { themeMui } from '../globalStyles/themeMui'
 
 interface DownloadModalContentProps {
   closeDownloadModal: () => void
-  fileType: string
+  fileType: string | undefined
   handleFileTypeChange: (event: SyntheticEvent<Element, Event>) => void
   isAnyFilterSelected: boolean
   setDownloadLinkHref: (event: MouseEvent<HTMLAnchorElement>) => void
@@ -56,6 +56,12 @@ export function DownloadModalContent({
         <FormControl>
           <RadioGroup aria-labelledby="demo-radio-buttons-group-label" name="radio-buttons-group">
             <FormControlLabel
+              value="shp"
+              control={<Radio checked={fileType === 'shp'} />}
+              label=".shp"
+              onChange={handleFileTypeChange}
+            />
+            <FormControlLabel
               value="csv"
               control={<Radio checked={fileType === 'csv'} />}
               label=".csv"
@@ -65,12 +71,6 @@ export function DownloadModalContent({
               value="json"
               control={<Radio checked={fileType === 'json'} />}
               label=".json"
-              onChange={handleFileTypeChange}
-            />
-            <FormControlLabel
-              value="shp"
-              control={<Radio checked={fileType === 'shp'} />}
-              label=".shp"
               onChange={handleFileTypeChange}
             />
           </RadioGroup>
