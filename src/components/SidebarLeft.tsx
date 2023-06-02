@@ -15,6 +15,7 @@ import { SpeciesFilter } from './SpeciesFilter'
 import { themeMui } from '../globalStyles/themeMui'
 import { DownloadModalContent } from './DownloadModalContent'
 import { TreeDiameterFilter } from './TreeDiameterFilter'
+import { theme } from '../globalStyles/theme'
 
 const SideBarWrapper = styled('div')`
   padding: ${themeMui.spacing(3)};
@@ -48,6 +49,17 @@ const DownloadForm = styled('form')`
   flex-direction: column;
   justify-content: space-between;
   flex-grow: 1;
+`
+
+const DownloadButtonWrapper = styled('div')`
+  background-color: ${theme.color.white};
+  bottom: -${themeMui.spacing(3)};
+  margin-top: ${themeMui.spacing(3)};
+  padding-bottom: ${themeMui.spacing(3)};
+  position: sticky;
+  & button {
+    width: 100%;
+  }
 `
 
 interface SidebarProps {
@@ -148,17 +160,18 @@ export function Sidebar({
                     setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
                   />
                 </div>
-
-                <Button
-                  variant="contained"
-                  color="success"
-                  type="button"
-                  onClick={openDownloadModal}
-                  disableElevation
-                  size="large"
-                >
-                  Download
-                </Button>
+                <DownloadButtonWrapper>
+                  <Button
+                    variant="contained"
+                    color="success"
+                    type="button"
+                    onClick={openDownloadModal}
+                    disableElevation
+                    size="large"
+                  >
+                    Download
+                  </Button>
+                </DownloadButtonWrapper>
               </DownloadForm>
             </>
           )}
