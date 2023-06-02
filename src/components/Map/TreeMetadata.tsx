@@ -27,7 +27,7 @@ export function TreeMetadata({ treeProperties }: TreeMetadataProps) {
     'Common Genus': commonGenus,
     'Common Species': commonSpecies,
     'Cultivar Name': cultivarName,
-    'DBH (cm)': diameter,
+    'DBH (DHP) (CM)': diameter,
     Address: address,
     City: city,
   } = treeProperties
@@ -46,7 +46,7 @@ export function TreeMetadata({ treeProperties }: TreeMetadataProps) {
         </tr>
         <tr>
           <th>Diameter (DBH)</th>
-          <td>{diameter ? <>{diameter}cm</> : null}</td>
+          <td>{diameter ? <>{diameter} cm</> : null}</td>
         </tr>
         <tr>
           <th>Botanical Name Genus</th>

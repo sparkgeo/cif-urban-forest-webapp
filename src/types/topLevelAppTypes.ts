@@ -17,7 +17,7 @@ export interface TreeProperties {
   'Common Genus': string
   'Common Species': string
   'Cultivar Name': string
-  'DBH (cm)': number
+  'DBH (DHP) (CM)': number
   Address: string
   City: string
   Id: string
