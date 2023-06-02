@@ -1,5 +1,6 @@
 import { CircularProgress, Snackbar, ThemeProvider } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { debounce } from 'lodash'
+import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
 import styled from '@emotion/styled'
@@ -87,6 +88,9 @@ export function App() {
       })
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const debouncedUpdateTrees = useCallback(debounce(updateTrees, 750), [])
+
   const clearSearchParameterTypeAndUpdateTrees = (paramName: string) => {
     // we cant trust react router's searchParams state,
     // so we grab url params from window
@@ -96,7 +100,7 @@ export function App() {
     // because it doesnt cacuse the app to refresh like writing
     //  to window.location.search would
     setSearchParameters(newSearchParameters)
-    updateTrees()
+    debouncedUpdateTrees()
   }
 
   const setSearchParametersAndUpdateTrees = (newParameters: SharableUrlParameters) => {
@@ -133,7 +137,7 @@ export function App() {
     // to window.location.search would
     setSearchParameters(updatedUrlParameters, { replace: true })
 
-    updateTrees()
+    debouncedUpdateTrees()
   }
 
   const sideBar = (
