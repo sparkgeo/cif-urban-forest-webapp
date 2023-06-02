@@ -24,6 +24,7 @@ import {
 } from '../../types/topLevelAppTypes'
 import { clusteredTreeLayer, treeCountLayer, unclusteredTreeLayer } from './mapLayers'
 import { TreeMetadata } from './TreeMetadata'
+import { themeMui } from '../../globalStyles/themeMui'
 
 export interface CifMapProps {
   setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
@@ -141,7 +142,7 @@ export function Map({ setSearchParametersAndUpdateTrees, trees, updateTrees }: C
       onLoad={handleOnLoad}
       interactiveLayerIds={[unclusteredTreeLayer.id!]}
     >
-      <NavigationControl showCompass={false} />
+      <NavigationControl showCompass={false} style={{ margin: themeMui.spacing(4) }} />
       <Source id="trees" type="geojson" data={trees} cluster clusterMaxZoom={14} clusterRadius={50}>
         <Layer {...clusteredTreeLayer} />
         <Layer {...treeCountLayer} />
