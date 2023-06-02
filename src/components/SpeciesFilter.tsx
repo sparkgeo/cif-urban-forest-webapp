@@ -6,6 +6,7 @@ import { CifFormControlLabel } from './customMuiFormComponents'
 import { RowAlignItemsCenter } from './containers'
 import { SetSearchParametersAndUpdateTrees, SharableUrlParameters } from '../types/topLevelAppTypes'
 import { CommonSpecies } from '../types/locationsFilterTypes'
+import { json } from 'react-router-dom'
 
 // interface SpeciesSingular {
 //   label: string
@@ -78,6 +79,9 @@ export function SpeciesFilter({
   const isAnySpeciesSelected = !!selectedValues.length
   const isSpeciesCheckboxIndeterminate =
     isAnySpeciesSelected && selectedValues.length < commonSpecies.length
+  const alphabeticallySortedSpecies = commonSpecies
+    .filter((option) => option !== undefined && option !== null)
+    .sort()
 
   useEffect(function loadUrlParameterValuesIntoInitialFormState() {
     const initialQueryParameters = new URLSearchParams(window.location.search)
@@ -132,7 +136,7 @@ export function SpeciesFilter({
         <Autocomplete
           sx={{ marginLeft: '24px' }}
           multiple
-          options={commonSpecies}
+          options={alphabeticallySortedSpecies}
           getOptionLabel={(option) => option}
           // renderOption={(props, option) => <OptionLabelWithTooltip option={option} {...props} />}
           renderInput={(params) => <TextField {...params} />}
