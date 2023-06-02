@@ -69,7 +69,7 @@ export function Sidebar({
   trees,
 }: SidebarProps) {
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState<boolean>(false)
-  const [fileType, setFileType] = useState<string>('csv')
+  const [fileType, setFileType] = useState<string | undefined>()
   const [isAnyFilterSelected, setIsAnyFilterSelected] = useState<boolean>(false)
   const treeCount = trees?.count
 
