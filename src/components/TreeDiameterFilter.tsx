@@ -1,5 +1,5 @@
 import { Checkbox, Collapse, TextField } from '@mui/material'
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 import { CifFormControlLabel, CifFormControlLabelIndented } from './customMuiFormComponents'
@@ -21,18 +21,21 @@ export function TreeDiameterFilter({
   setSearchParametersAndUpdateTrees,
 }: TreeDiameterFilterProps) {
   const [isTreeDiameterFilterExpanded, setIsTreeDiameterExpanded] = useState(false)
-  const [isAnyValueForAnySize, setIsValueForAnySize] = useState(false)
+  const [minTreeDiameter, setMinTreeDiameter] = useState<string>('')
+  const [maxTreeDiameter, setMaxTreeDiameter] = useState<string>('')
+  const isAnyValueForAnySize = !!maxTreeDiameter || !!minTreeDiameter
+
+  useEffect(function loadInitialTreeDiameterValuesFromUrl() {
+    const initialQueryParameters = new URLSearchParams(window.location.search)
+    const initialMaxTreeDiameter = initialQueryParameters.get('max_dbh')
+    const initialMinTreeDiameter = initialQueryParameters.get('min_dbh')
+
+    setMaxTreeDiameter(initialMaxTreeDiameter ?? '')
+    setMinTreeDiameter(initialMinTreeDiameter ?? '')
+  }, [])
 
   const toggleIsTreeDiameterFilterExpanded = () => {
     setIsTreeDiameterExpanded(!isTreeDiameterFilterExpanded)
-  }
-
-  const setTreeDiameterSelectedStatus = () => {
-    const filterSearchParams = new URLSearchParams(window.location.search)
-    const urlMinDbh = filterSearchParams.get('min_dbh')
-    const urlMaxDbh = filterSearchParams.get('max_dbh')
-
-    setIsValueForAnySize(!!urlMinDbh || !!urlMaxDbh)
   }
 
   const handleSizeChange = ({ event, urlParamName }: handleSizeChangeProps) => {
@@ -40,23 +43,22 @@ export function TreeDiameterFilter({
     const isValue = value !== ''
 
     if (isValue) {
-      setIsValueForAnySize(true)
       setSearchParametersAndUpdateTrees({
         [urlParamName]: value,
       } as unknown as SharableUrlParameters)
     }
     if (!isValue) {
       clearSearchParameterTypeAndUpdateTrees(urlParamName)
-
-      setTreeDiameterSelectedStatus()
     }
   }
 
   const handleMinSizeChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setMinTreeDiameter(event.target.value)
     handleSizeChange({ event, urlParamName: 'min_dbh' })
   }
 
   const handleMaxSizeChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setMaxTreeDiameter(event.target.value)
     handleSizeChange({ event, urlParamName: 'max_dbh' })
   }
 
@@ -76,13 +78,23 @@ export function TreeDiameterFilter({
         <CifFormControlLabelIndented
           label="Min Size (cm)"
           control={
-            <TextField type="number" inputProps={{ min: 0 }} onChange={handleMinSizeChange} />
+            <TextField
+              inputProps={{ min: 0 }}
+              onChange={handleMinSizeChange}
+              type="number"
+              value={minTreeDiameter}
+            />
           }
         />
         <CifFormControlLabelIndented
           label="Max Size (cm)"
           control={
-            <TextField type="number" inputProps={{ min: 0 }} onChange={handleMaxSizeChange} />
+            <TextField
+              inputProps={{ min: 0 }}
+              onChange={handleMaxSizeChange}
+              type="number"
+              value={maxTreeDiameter}
+            />
           }
         />
       </Collapse>
