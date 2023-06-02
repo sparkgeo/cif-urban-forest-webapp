@@ -138,7 +138,7 @@ export function Sidebar({
             <>
               {treeCount ? (
                 <StyledTreeCount>
-                  <div>{new Intl.NumberFormat().format(treeCount)} trees shown</div>
+                  <div>{new Intl.NumberFormat().format(treeCount)} Trees Shown</div>
                 </StyledTreeCount>
               ) : null}
 
