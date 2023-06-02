@@ -12,7 +12,7 @@ const ButtonLink = styled(Button)`
   text-transform: uppercase;
   border-radius: 100px;
   &:hover {
-    background-color: #f5f5f5;
+    background-color: ${theme.color.white};
   }
 `
 
