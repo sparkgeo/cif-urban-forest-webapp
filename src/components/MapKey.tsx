@@ -26,21 +26,21 @@ const mapKeyWidth = '48px'
 const HighTreeDensityKey = styled('div')`
   height: ${mapKeyHeight};
   width: ${mapKeyWidth};
-  background-color: ${theme.color.treeDensity.high};
+  background-color: ${theme.color.treeDensity.fill.high};
   border-top-left-radius: ${theme.border.radius};
   border-bottom-left-radius: ${theme.border.radius};
 `
 const MediumTreeDensityKey = styled('div')`
   height: ${mapKeyHeight};
   width: ${mapKeyWidth};
-  background-color: ${theme.color.treeDensity.medium};
+  background-color: ${theme.color.treeDensity.fill.medium};
   margin-left: ${themeMui.spacing(0.4)};
   margin-right: ${themeMui.spacing(0.4)};
 `
 const LowTreeDensityKey = styled('div')`
   height: ${mapKeyHeight};
   width: ${mapKeyWidth};
-  background-color: ${theme.color.treeDensity.low};
+  background-color: ${theme.color.treeDensity.fill.low};
   border-top-right-radius: ${theme.border.radius};
   border-bottom-right-radius: ${theme.border.radius};
 `
