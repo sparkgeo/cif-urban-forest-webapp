@@ -100,6 +100,7 @@ export function Map({ setSearchParametersAndUpdateTrees, trees, updateTrees }: C
             // @ts-ignore
             center: features[0].geometry.coordinates,
             zoom,
+            duration: 1000,
           })
         })
     })
