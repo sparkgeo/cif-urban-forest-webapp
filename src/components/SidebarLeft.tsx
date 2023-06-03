@@ -24,6 +24,8 @@ const SideBarWrapper = styled('div')`
   direction: rtl;
   scrollbar-width: thin;
   height: 100vh;
+  box-shadow: ${themeMui.shadows[9]};
+  z-index: 1;
 `
 const InnerSideBarWrapper = styled('div')`
   display: flex;
