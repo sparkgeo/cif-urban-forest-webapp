@@ -20,7 +20,7 @@ import { themeMui } from '../globalStyles/themeMui'
 interface DownloadModalContentProps {
   closeDownloadModal: () => void
   fileType: string | undefined
-  handleExclusionDataChange: (event: ChangeEvent<HTMLAnchorElement>) => void
+  handleExclusionDataChange: (event: ChangeEvent<HTMLInputElement>) => void
   handleFileTypeChange: (event: SyntheticEvent<Element, Event>) => void
   isAnyFilterSelected: boolean
   isExclusionDataIncluded: boolean
