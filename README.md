@@ -30,6 +30,7 @@ Think of this template more as a list of things to consider. Feel free to change
 ## Architectural Decisions and Tradeoffs
 
 - React Router's `useSearchParams` hook provides `searchParams` state that is stale. Instead we get query parameters by reading `window.location.search` We still use the provided `setSearchParams` to update the url (writing to `window.location.search` would cause the app to reload).
+- With not a lot of time to give to holistic artectural decisions, it was decided to use URL parameters for global state. This may have been a mistake. If time for refactoring ever comes, developers should consider using native react state.
 
 ## Testing
 

@@ -9,6 +9,7 @@ export interface SharableUrlParameters extends URLSearchParams {
   cities?: string[]
   max_dbh?: string
   min_dbh?: string
+  zoom?: string
 }
 
 export interface TreeProperties {
@@ -23,7 +24,7 @@ export interface TreeProperties {
   Id: string
   Neighbourhood: string
 }
-export interface TreeApiFeatureCollection extends FeatureCollection {
+export interface ApiFeatureCollection extends FeatureCollection {
   limit?: number
   count?: number
 }

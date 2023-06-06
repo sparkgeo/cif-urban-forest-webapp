@@ -1,5 +1,6 @@
 import { CircularProgress, Snackbar, ThemeProvider } from '@mui/material'
 import { debounce } from 'lodash'
+import { FeatureCollection } from 'geojson'
 import { useCallback, useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import axios from 'axios'
@@ -8,10 +9,12 @@ import styled from '@emotion/styled'
 import { Layout } from './components/Layout'
 import { Sidebar } from './components/SidebarLeft'
 import { themeMui } from './globalStyles/themeMui'
-import { SharableUrlParameters, TreeApiFeatureCollection } from './types/topLevelAppTypes'
+import { SharableUrlParameters, ApiFeatureCollection } from './types/topLevelAppTypes'
 import { Map } from './components/Map/Map'
 import { CommonSpecies, Municipalities, Provinces } from './types/locationsFilterTypes'
 import { RowAlignItemsCenter } from './components/containers'
+import { MIN_TREE_ZOOM } from './constants'
+import { mockCityCountData } from './mockCityData'
 
 const LoaderPaddingLeft = styled(CircularProgress)`
   margin-left: ${themeMui.spacing(2)};
@@ -23,18 +26,23 @@ const CustomSnackbar = styled(Snackbar)`
 `
 
 export function App() {
-  const [trees, setTrees] = useState<TreeApiFeatureCollection>({
+  const [cities, setCities] = useState<FeatureCollection>({
     type: 'FeatureCollection',
     features: [],
   })
+  const [trees, setTrees] = useState<ApiFeatureCollection>({
+    type: 'FeatureCollection',
+    features: [],
+  })
+  const [, setSearchParameters] = useSearchParams()
   const [areLocationOptionsLoading, setAreLocationOptionsLoading] = useState(true)
+  const [commmonSpecies, setCommonSpecies] = useState<CommonSpecies>([])
+  const [errorText, setErrorText] = useState<string[]>([])
   const [isTreeDataLoading, setIsTreeDataLoading] = useState(false)
   const [municipalities, setMunicipalities] = useState<Municipalities>({})
   const [provinces, setProvinces] = useState<Provinces>([])
-  const [commmonSpecies, setCommonSpecies] = useState<CommonSpecies>([])
-  const [, setSearchParameters] = useSearchParams()
+  const [treeCount, setTreeCount] = useState<undefined | number>()
   const isDataInitializing = areLocationOptionsLoading
-  const [errorText, setErrorText] = useState<string[]>([])
   const clearErrorText = (errorTextToRemove: string) => {
     setErrorText((currentErrorText) => {
       return currentErrorText.filter((error) => error !== errorTextToRemove)
@@ -67,17 +75,37 @@ export function App() {
   const updateTrees = () => {
     setIsTreeDataLoading(true)
     // we cant trust react router dom's searchParams state, so we grab query parms from window
-    const treeSearchParams = new URLSearchParams(window.location.search)
-    treeSearchParams.append('count', 'true')
-    const treeApiUrl = `${
-      import.meta.env.VITE_CIF_URBAN_FOREST_API
-    }/trees/search?${treeSearchParams.toString()}`
+    const treeSearchParamsForApi = new URLSearchParams(window.location.search)
+    const mapZoomLevel = Number(treeSearchParamsForApi.get('zoom'))
+    const shouldShowTrees = mapZoomLevel > MIN_TREE_ZOOM
+
+    if (shouldShowTrees) {
+      treeSearchParamsForApi.append('count', 'true')
+    }
+    treeSearchParamsForApi.delete('zoom')
+
+    const treeApiUrl = shouldShowTrees
+      ? `${
+          import.meta.env.VITE_CIF_URBAN_FOREST_API
+        }/trees/search?${treeSearchParamsForApi.toString()}`
+      : `${import.meta.env.VITE_CIF_URBAN_FOREST_API}/health`
+    // : `${
+    //     import.meta.env.VITE_CIF_URBAN_FOREST_API
+    //   }/trees/city_counts?${treeSearchParamsForApi.toString()}`
 
     axios
       .get(treeApiUrl)
-      .then(({ data: apiTreeData }) => {
+      .then(({ data }) => {
         setIsTreeDataLoading(false)
-        setTrees(apiTreeData)
+        setTreeCount(data.count)
+        if (shouldShowTrees) {
+          setTrees(data)
+        }
+        if (!shouldShowTrees) {
+          // setCities(data)
+          setCities(mockCityCountData)
+          setTreeCount(mockCityCountData.count)
+        }
       })
       .catch(() => {
         setIsTreeDataLoading(false)
@@ -131,6 +159,7 @@ export function App() {
         : existingSearchParameters.getAll('common_species'),
       min_dbh: newParameters.min_dbh || existingSearchParameters.getAll('min_dbh'),
       max_dbh: newParameters.max_dbh || existingSearchParameters.getAll('max_dbh'),
+      zoom: newParameters.zoom || existingSearchParameters.get('zoom'),
     } as SharableUrlParameters
     // react router's setSearchParams still works and is used because
     // it doesnt cacuse the app to refresh like writing
@@ -148,7 +177,7 @@ export function App() {
       municipalities={municipalities}
       provinces={provinces}
       setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
-      trees={trees}
+      treeCount={treeCount}
     />
   )
   const map = (
@@ -156,6 +185,7 @@ export function App() {
       updateTrees={updateTrees}
       setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
       trees={trees}
+      cities={cities}
     />
   )
 

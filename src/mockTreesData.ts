@@ -1,6 +1,6 @@
-import { TreeApiFeatureCollection } from './types/topLevelAppTypes'
+import { ApiFeatureCollection } from './types/topLevelAppTypes'
 
-export const mockTreesResponse: TreeApiFeatureCollection = {
+export const mockTreesResponse: ApiFeatureCollection = {
   type: 'FeatureCollection',
   limit: 100,
   count: 28,

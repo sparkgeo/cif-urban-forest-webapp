@@ -1,10 +1,7 @@
 import { Button, Dialog, styled } from '@mui/material'
 import { MouseEvent, SyntheticEvent, useState } from 'react'
 
-import {
-  SetSearchParametersAndUpdateTrees,
-  TreeApiFeatureCollection,
-} from '../types/topLevelAppTypes'
+import { SetSearchParametersAndUpdateTrees } from '../types/topLevelAppTypes'
 
 import { CommonSpecies, Municipalities, Provinces } from '../types/locationsFilterTypes'
 import { Loader } from './Loader'
@@ -71,7 +68,7 @@ interface SidebarProps {
   municipalities: Municipalities
   provinces: Provinces
   setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
-  trees: TreeApiFeatureCollection
+  treeCount: number | undefined
 }
 export function Sidebar({
   clearSearchParameterTypeAndUpdateTrees,
@@ -80,12 +77,11 @@ export function Sidebar({
   municipalities,
   provinces,
   setSearchParametersAndUpdateTrees,
-  trees,
+  treeCount,
 }: SidebarProps) {
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState<boolean>(false)
   const [fileType, setFileType] = useState<string | undefined>()
   const [isAnyFilterSelected, setIsAnyFilterSelected] = useState<boolean>(false)
-  const treeCount = trees?.count
 
   const getFilterSearchParameters = () => {
     const filterSearchParams = new URLSearchParams(window.location.search)

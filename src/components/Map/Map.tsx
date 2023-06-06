@@ -15,20 +15,27 @@ import maplibregl, { LngLatBounds } from 'maplibre-gl'
 
 import { useState } from 'react'
 import { basemapStyle } from './basemapStyle'
-import { INITIAL_VIEW_STATE } from '../../constants'
+import { CITY_CLICK_ZOOM_TO_LEVEL, INITIAL_VIEW_STATE } from '../../constants'
 import {
   SetSearchParametersAndUpdateTrees,
   SharableUrlParameters,
-  TreeApiFeatureCollection,
+  ApiFeatureCollection,
   TreeProperties,
 } from '../../types/topLevelAppTypes'
-import { clusteredTreeLayer, treeCountLayer, unclusteredTreeLayer } from './mapLayers'
+import {
+  cityCountLayer,
+  cityLayer,
+  clusteredTreeLayer,
+  treeCountLayer,
+  unclusteredTreeLayer,
+} from './mapLayers'
 import { TreeMetadata } from './TreeMetadata'
 import { themeMui } from '../../globalStyles/themeMui'
 
 export interface CifMapProps {
+  cities: ApiFeatureCollection
   setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
-  trees: TreeApiFeatureCollection
+  trees: ApiFeatureCollection
   updateTrees: () => void
 }
 
@@ -37,14 +44,21 @@ interface PopupInfo {
   content: JSX.Element
 }
 
-export function Map({ setSearchParametersAndUpdateTrees, trees, updateTrees }: CifMapProps) {
+export function Map({
+  cities,
+  setSearchParametersAndUpdateTrees,
+  trees,
+  updateTrees,
+}: CifMapProps) {
   const [popupInfo, setPopupInfo] = useState<PopupInfo | null>(null)
   const closePopup = () => {
     setPopupInfo(null)
   }
 
   const updateUrlExtentParameters = (event: MapboxEvent | ViewStateChangeEvent) => {
-    const mapBounds = event.target.getBounds()
+    const map = event.target
+    const currentZoom = map.getZoom()
+    const mapBounds = map.getBounds()
 
     const min_lat = mapBounds.getSouth().toFixed(4)
     const min_lng = mapBounds.getWest().toFixed(4)
@@ -55,6 +69,7 @@ export function Map({ setSearchParametersAndUpdateTrees, trees, updateTrees }: C
       min_lng,
       max_lat,
       max_lng,
+      zoom: currentZoom.toString(),
     } as SharableUrlParameters)
   }
 
@@ -104,16 +119,30 @@ export function Map({ setSearchParametersAndUpdateTrees, trees, updateTrees }: C
           })
         })
     })
+
+    map.on('click', 'cities', (mouseEvent: MapLayerMouseEvent) => {
+      const cityGeometry = mouseEvent.features?.[0].geometry as GeoJSON.Point
+      const cityCentroid = cityGeometry.coordinates
+
+      // @ts-ignore
+      map.easeTo({ center: cityCentroid, zoom: CITY_CLICK_ZOOM_TO_LEVEL, duration: 1000 })
+    })
     map.on('mouseenter', 'tree-clusters', () => {
       map.getCanvas().style.cursor = 'pointer'
     })
     map.on('mouseenter', 'unclustered-trees', () => {
       map.getCanvas().style.cursor = 'pointer'
     })
+    map.on('mouseenter', 'cities', () => {
+      map.getCanvas().style.cursor = 'pointer'
+    })
     map.on('mouseleave', 'tree-clusters', () => {
       map.getCanvas().style.cursor = ''
     })
     map.on('mouseleave', 'unclustered-trees', () => {
+      map.getCanvas().style.cursor = ''
+    })
+    map.on('mouseleave', 'cities', () => {
       map.getCanvas().style.cursor = ''
     })
     map.on('click', 'unclustered-trees', (unclusteredTreeClickEvent: MapLayerMouseEvent) => {
@@ -148,6 +177,10 @@ export function Map({ setSearchParametersAndUpdateTrees, trees, updateTrees }: C
         <Layer {...clusteredTreeLayer} />
         <Layer {...treeCountLayer} />
         <Layer {...unclusteredTreeLayer} />
+      </Source>
+      <Source id="cities" type="geojson" data={cities}>
+        <Layer {...cityLayer} />
+        <Layer {...cityCountLayer} />
       </Source>
       {popupInfo ? (
         <Popup
