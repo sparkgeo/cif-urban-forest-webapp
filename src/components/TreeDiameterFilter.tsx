@@ -79,6 +79,7 @@ export function TreeDiameterFilter({
           onChange={handleMinSizeChange}
           type="number"
           value={minTreeDiameter}
+          sx={{ marginLeft: '24px' }}
         />
         <CifLabelIndented>Max Size (cm)</CifLabelIndented>
         <TextField
@@ -86,6 +87,7 @@ export function TreeDiameterFilter({
           onChange={handleMaxSizeChange}
           type="number"
           value={maxTreeDiameter}
+          sx={{ marginLeft: '24px' }}
         />
       </Collapse>
     </FilterContainer>
