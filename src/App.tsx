@@ -80,8 +80,8 @@ export function App() {
 
     if (shouldShowTrees) {
       treeSearchParamsForApi.append('count', 'true')
+      treeSearchParamsForApi.delete('zoom')
     }
-    treeSearchParamsForApi.delete('zoom')
 
     const treeApiUrl = shouldShowTrees
       ? `${
