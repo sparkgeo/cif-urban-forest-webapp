@@ -93,7 +93,7 @@ export const unclusteredTreeLayer: LayerProps = {
   minzoom: MIN_TREE_ZOOM,
   filter: ['!', ['has', 'point_count']],
   paint: {
-    'circle-color': theme.color.charcoal,
+    'circle-color': theme.color.primary,
     'circle-radius': 7,
     'circle-stroke-width': 1,
     'circle-stroke-color': '#fff',
