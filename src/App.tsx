@@ -14,7 +14,6 @@ import { Map } from './components/Map/Map'
 import { CommonSpecies, Municipalities, Provinces } from './types/locationsFilterTypes'
 import { RowAlignItemsCenter } from './components/containers'
 import { MIN_TREE_ZOOM } from './constants'
-import { mockCityCountData } from './mockCityData'
 
 const LoaderPaddingLeft = styled(CircularProgress)`
   margin-left: ${themeMui.spacing(2)};
@@ -88,10 +87,9 @@ export function App() {
       ? `${
           import.meta.env.VITE_CIF_URBAN_FOREST_API
         }/trees/search?${treeSearchParamsForApi.toString()}`
-      : `${import.meta.env.VITE_CIF_URBAN_FOREST_API}/health`
-    // : `${
-    //     import.meta.env.VITE_CIF_URBAN_FOREST_API
-    //   }/trees/city_counts?${treeSearchParamsForApi.toString()}`
+      : `${
+          import.meta.env.VITE_CIF_URBAN_FOREST_API
+        }/trees/city_counts?${treeSearchParamsForApi.toString()}`
 
     axios
       .get(treeApiUrl)
@@ -102,9 +100,7 @@ export function App() {
           setTrees(data)
         }
         if (!shouldShowTrees) {
-          // setCities(data)
-          setCities(mockCityCountData)
-          setTreeCount(mockCityCountData.count)
+          setCities(data)
         }
       })
       .catch(() => {
