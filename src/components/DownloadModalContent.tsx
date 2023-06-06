@@ -1,5 +1,6 @@
 import {
   Button,
+  Checkbox,
   DialogContent,
   DialogTitle,
   FormControl,
@@ -10,7 +11,7 @@ import {
   styled,
 } from '@mui/material'
 import { Download } from '@mui/icons-material'
-import { SyntheticEvent, MouseEvent } from 'react'
+import { SyntheticEvent, MouseEvent, ChangeEvent } from 'react'
 import CloseIcon from '@mui/icons-material/Close'
 
 import { Column, Row } from './containers'
@@ -19,8 +20,10 @@ import { themeMui } from '../globalStyles/themeMui'
 interface DownloadModalContentProps {
   closeDownloadModal: () => void
   fileType: string | undefined
+  handleExclusionDataChange: (event: ChangeEvent<HTMLAnchorElement>) => void
   handleFileTypeChange: (event: SyntheticEvent<Element, Event>) => void
   isAnyFilterSelected: boolean
+  isExclusionDataIncluded: boolean
   setDownloadLinkHref: (event: MouseEvent<HTMLAnchorElement>) => void
 }
 
@@ -31,8 +34,10 @@ const ErrorButtonWrapper = styled(Row)`
 export function DownloadModalContent({
   closeDownloadModal,
   fileType,
+  handleExclusionDataChange,
   handleFileTypeChange,
   isAnyFilterSelected,
+  isExclusionDataIncluded,
   setDownloadLinkHref,
 }: DownloadModalContentProps) {
   const filterSelectedContent = (
@@ -91,6 +96,12 @@ export function DownloadModalContent({
           />
           Download
         </Button>
+        <FormControlLabel
+          label="Include exclusion data in download"
+          control={
+            <Checkbox onChange={handleExclusionDataChange} checked={isExclusionDataIncluded} />
+          }
+        />
       </Column>
     </>
   )

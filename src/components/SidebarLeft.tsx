@@ -1,5 +1,5 @@
 import { Button, Dialog, styled } from '@mui/material'
-import { MouseEvent, SyntheticEvent, useState } from 'react'
+import { ChangeEvent, MouseEvent, SyntheticEvent, useState } from 'react'
 
 import { SetSearchParametersAndUpdateTrees } from '../types/topLevelAppTypes'
 
@@ -82,6 +82,7 @@ export function Sidebar({
   const [isDownloadModalOpen, setIsDownloadModalOpen] = useState<boolean>(false)
   const [fileType, setFileType] = useState<string | undefined>()
   const [isAnyFilterSelected, setIsAnyFilterSelected] = useState<boolean>(false)
+  const [isExclusionDataIncluded, setIsExclusionDataIncluded] = useState<boolean>(false)
 
   const getFilterSearchParameters = () => {
     const filterSearchParams = new URLSearchParams(window.location.search)
@@ -111,6 +112,9 @@ export function Sidebar({
     const { currentTarget } = event
     setFileType((currentTarget as HTMLInputElement).value)
   }
+  const handleExclusionDataChange = (event: ChangeEvent<HTMLInputElement>) => {
+    setIsExclusionDataIncluded(event.target.checked)
+  }
 
   const setDownloadLinkHref = (event: MouseEvent<HTMLAnchorElement>) => {
     const downloadLink = event.currentTarget
@@ -118,7 +122,7 @@ export function Sidebar({
 
     const treeApiUrl = `${
       import.meta.env.VITE_CIF_URBAN_FOREST_API
-    }/trees/search?${filterSearchParams.toString()}&file=${fileType}`
+    }/trees/search?${filterSearchParams.toString()}&file=${fileType}&return_all=${isExclusionDataIncluded}`
 
     downloadLink.href = treeApiUrl
   }
@@ -179,9 +183,11 @@ export function Sidebar({
         <DownloadModalContent
           closeDownloadModal={closeDownloadModal}
           fileType={fileType}
+          handleExclusionDataChange={handleExclusionDataChange}
           handleFileTypeChange={handleFileTypeChange}
           isAnyFilterSelected={isAnyFilterSelected}
           setDownloadLinkHref={setDownloadLinkHref}
+          isExclusionDataIncluded={isExclusionDataIncluded}
         />
       </Dialog>
     </>
