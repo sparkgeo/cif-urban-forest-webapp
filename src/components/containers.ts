@@ -1,4 +1,5 @@
 import { styled } from '@mui/material'
+import { themeMui } from '../globalStyles/themeMui'
 
 export const Column = styled('div')`
   display: flex;
@@ -20,4 +21,7 @@ export const Row = styled('div')`
 
 export const RowAlignItemsCenter = styled(Row)`
   align-items: center;
+`
+export const FilterContainer = styled('div')`
+  margin-top: ${themeMui.spacing(8)};
 `

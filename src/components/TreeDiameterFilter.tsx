@@ -3,7 +3,7 @@ import { ChangeEvent, useEffect, useState } from 'react'
 
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 import { CifLabel, CifLabelIndented } from './customMuiFormComponents'
-import { RowAlignItemsCenter } from './containers'
+import { FilterContainer, RowAlignItemsCenter } from './containers'
 import { SetSearchParametersAndUpdateTrees, SharableUrlParameters } from '../types/topLevelAppTypes'
 
 interface TreeDiameterFilterProps {
@@ -63,7 +63,7 @@ export function TreeDiameterFilter({
   }
 
   return (
-    <>
+    <FilterContainer>
       <RowAlignItemsCenter>
         <ButtonExpandCollapse
           onClick={toggleIsTreeDiameterFilterExpanded}
@@ -88,6 +88,6 @@ export function TreeDiameterFilter({
           value={maxTreeDiameter}
         />
       </Collapse>
-    </>
+    </FilterContainer>
   )
 }

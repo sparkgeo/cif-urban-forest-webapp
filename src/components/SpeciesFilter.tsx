@@ -3,7 +3,7 @@ import { SyntheticEvent, useEffect, useState } from 'react'
 
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 import { CifLabel } from './customMuiFormComponents'
-import { RowAlignItemsCenter } from './containers'
+import { FilterContainer, RowAlignItemsCenter } from './containers'
 import { SetSearchParametersAndUpdateTrees, SharableUrlParameters } from '../types/topLevelAppTypes'
 import { CommonSpecies } from '../types/locationsFilterTypes'
 
@@ -114,7 +114,7 @@ export function SpeciesFilter({
   }
 
   return (
-    <>
+    <FilterContainer>
       <RowAlignItemsCenter>
         <ButtonExpandCollapse
           onClick={toggleIsSpeciesFilterExpanded}
@@ -140,6 +140,6 @@ export function SpeciesFilter({
           filterSelectedOptions
         />
       </Collapse>
-    </>
+    </FilterContainer>
   )
 }

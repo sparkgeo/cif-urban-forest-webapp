@@ -14,7 +14,7 @@ import {
   Provinces,
 } from '../types/locationsFilterTypes'
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
-import { RowAlignItemsCenter } from './containers'
+import { FilterContainer, RowAlignItemsCenter } from './containers'
 import { SetSearchParametersAndUpdateTrees, SharableUrlParameters } from '../types/topLevelAppTypes'
 
 const intialLocationsState: LocationsState = {}
@@ -183,7 +183,7 @@ export function LocationsFilter({
   )
 
   return (
-    <>
+    <FilterContainer>
       <RowAlignItemsCenter>
         <ButtonExpandCollapse
           onClick={toggleIsLocationsFilterExpanded}
@@ -197,6 +197,6 @@ export function LocationsFilter({
         />
       </RowAlignItemsCenter>
       <Collapse in={isLocationsFilterExpanded}>{provinceCheckboxes}</Collapse>
-    </>
+    </FilterContainer>
   )
 }
