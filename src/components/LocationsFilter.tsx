@@ -139,10 +139,6 @@ export function LocationsFilter({
     )
     locationsCheckedDispatch(actionForDispatch)
     updateLocationFilterSearchParametersOnChange(updatedLocationsCheckedStateHack)
-
-    if (isChecked) {
-      setIsLocationsFilterExpanded(true)
-    }
   }
 
   const handleMunicipalityCheckboxChange = ({
