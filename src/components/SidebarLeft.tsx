@@ -1,18 +1,18 @@
 import { Button, Dialog, styled } from '@mui/material'
-import { ChangeEvent, MouseEvent, SyntheticEvent, useState } from 'react'
-
-import { SetSearchParametersAndUpdateTrees } from '../types/topLevelAppTypes'
+import { ChangeEvent, MouseEvent, SyntheticEvent, useReducer, useState } from 'react'
+import { RefreshRounded } from '@mui/icons-material'
 
 import { CommonSpecies, Municipalities, Provinces } from '../types/locationsFilterTypes'
+import { DownloadModalContent } from './DownloadModalContent'
 import { Loader } from './Loader'
 import { LocationsFilter } from './LocationsFilter'
 // @ts-ignore.
 import { ReactComponent as CifLogo } from '../assets/logo.svg'
+import { SetSearchParametersAndUpdateTrees } from '../types/topLevelAppTypes'
 import { SpeciesFilter } from './SpeciesFilter'
-import { themeMui } from '../globalStyles/themeMui'
-import { DownloadModalContent } from './DownloadModalContent'
-import { TreeDiameterFilter } from './TreeDiameterFilter'
 import { theme } from '../globalStyles/theme'
+import { themeMui } from '../globalStyles/themeMui'
+import { TreeDiameterFilter } from './TreeDiameterFilter'
 
 const SideBarWrapper = styled('div')`
   padding: ${themeMui.spacing(3)};
@@ -52,16 +52,39 @@ const DownloadForm = styled('form')`
 
 const DownloadButtonWrapper = styled('div')`
   background-color: ${theme.color.white};
+  display: flex;
+  flex-direction: column;
   bottom: -${themeMui.spacing(3)};
   margin-top: ${themeMui.spacing(3)};
   padding-bottom: ${themeMui.spacing(3)};
   position: sticky;
-  & button {
+  & button:nth-child(2) {
     width: 100%;
   }
 `
 
+const ClearFilterButton = styled('button')`
+  align-items: center;
+  align-self: flex-end;
+  background-color: transparent;
+  border: none;
+  display: flex;
+  font-size: 12px;
+  font-weight: 400;
+  margin-bottom: ${themeMui.spacing(2)};
+  min-width: max-content;
+  text-transform: uppercase;
+  &:hover {
+    color: ${theme.color.primary};
+  }
+  & svg {
+    font-size: inherit;
+    margin-right: ${themeMui.spacing(1)};
+  }
+`
+
 interface SidebarProps {
+  clearAllSearchParametersAndUpdateTrees: () => void
   clearSearchParameterTypeAndUpdateTrees: (paramName: string) => void
   commonSpecies: CommonSpecies
   isDataInitializing: boolean
@@ -70,7 +93,8 @@ interface SidebarProps {
   setSearchParametersAndUpdateTrees: SetSearchParametersAndUpdateTrees
   treeCount: number | undefined
 }
-export function Sidebar({
+export function SidebarLeft({
+  clearAllSearchParametersAndUpdateTrees,
   clearSearchParameterTypeAndUpdateTrees,
   commonSpecies,
   isDataInitializing,
@@ -83,6 +107,7 @@ export function Sidebar({
   const [fileType, setFileType] = useState<string | undefined>()
   const [isAnyFilterSelected, setIsAnyFilterSelected] = useState<boolean>(false)
   const [isExclusionDataIncluded, setIsExclusionDataIncluded] = useState<boolean>(false)
+  const [hackToForceFilterReset, forceFiltersToReset] = useReducer((value) => value + 1, 0)
 
   const getFilterSearchParameters = () => {
     const filterSearchParams = new URLSearchParams(window.location.search)
@@ -127,9 +152,14 @@ export function Sidebar({
     downloadLink.href = treeApiUrl
   }
 
+  const handleClearFilterClick = () => {
+    clearAllSearchParametersAndUpdateTrees()
+    forceFiltersToReset()
+  }
+
   return (
     <>
-      <SideBarWrapper>
+      <SideBarWrapper key={hackToForceFilterReset}>
         <InnerSideBarWrapper>
           <a href="http://www.cif-ifc.org/" target="_blank" rel="noreferrer">
             <StyledCifLogo alt="Canadian Institute of Forestry / Institude forestier du Canada Logo" />
@@ -163,6 +193,10 @@ export function Sidebar({
                   />
                 </div>
                 <DownloadButtonWrapper>
+                  <ClearFilterButton type="button" onClick={handleClearFilterClick}>
+                    <RefreshRounded />
+                    Clear Filters
+                  </ClearFilterButton>
                   <Button
                     variant="contained"
                     color="success"
