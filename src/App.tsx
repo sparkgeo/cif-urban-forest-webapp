@@ -7,7 +7,7 @@ import axios from 'axios'
 import styled from '@emotion/styled'
 
 import { Layout } from './components/Layout'
-import { Sidebar } from './components/SidebarLeft'
+import { SidebarLeft } from './components/SidebarLeft'
 import { themeMui } from './globalStyles/themeMui'
 import { SharableUrlParameters, ApiFeatureCollection } from './types/topLevelAppTypes'
 import { Map } from './components/Map/Map'
@@ -127,6 +127,21 @@ export function App() {
     debouncedUpdateTrees()
   }
 
+  const clearAllSearchParametersAndUpdateTrees = () => {
+    // we cant trust react router's searchParams state,
+    // so we grab url params from window
+    const newSearchParameters = new URLSearchParams(window.location.search)
+    newSearchParameters.delete('cities')
+    newSearchParameters.delete('common_species')
+    newSearchParameters.delete('min_dbh')
+    newSearchParameters.delete('max_dbh')
+    // react router's setSearchParams still works and is used
+    // because it doesnt cacuse the app to refresh like writing
+    //  to window.location.search would
+    setSearchParameters(newSearchParameters)
+    debouncedUpdateTrees()
+  }
+
   const setSearchParametersAndUpdateTrees = (newParameters: SharableUrlParameters) => {
     // we cant trust react router's searchParams state,
     // so we grab url params from window
@@ -166,7 +181,7 @@ export function App() {
   }
 
   const sideBar = (
-    <Sidebar
+    <SidebarLeft
       clearSearchParameterTypeAndUpdateTrees={clearSearchParameterTypeAndUpdateTrees}
       commonSpecies={commmonSpecies}
       isDataInitializing={isDataInitializing}
@@ -174,6 +189,7 @@ export function App() {
       provinces={provinces}
       setSearchParametersAndUpdateTrees={setSearchParametersAndUpdateTrees}
       treeCount={treeCount}
+      clearAllSearchParametersAndUpdateTrees={clearAllSearchParametersAndUpdateTrees}
     />
   )
   const map = (
