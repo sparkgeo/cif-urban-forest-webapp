@@ -14,4 +14,7 @@ export const themeMui = createTheme({
       main: theme.color.secondary,
     },
   },
+  components: {
+    MuiTooltip: { styleOverrides: { tooltip: { backgroundColor: theme.color.tooltipBackground } } },
+  },
 })

@@ -9,16 +9,19 @@ const MapKeyWrapper = styled('div')`
   border-radius: ${theme.border.radius};
   display: flex;
   flex-direction: column;
-  padding: ${themeMui.spacing(2)};
+  padding: 12px 20px;
   background-color: ${theme.color.white};
   box-shadow: ${themeMui.shadows[4]};
+
   & p {
     margin-top: 0;
     margin-bottom: 0;
+    font-size: small;
   }
   & p:first-child {
     text-transform: uppercase;
     margin-bottom: ${themeMui.spacing(1)};
+    font-size: medium;
   }
 `
 const mapKeyHeight = '28px'
@@ -69,9 +72,9 @@ const tooltipContent = (
       <dt>High:</dt>
       <dd>751+ trees</dd>
       <dt>Med:</dt>
-      <dd>51 - 750 trees</dd>
+      <dd>51-750 trees</dd>
       <dt>Low:</dt>
-      <dd>2 - 50 trees</dd>
+      <dd>2-50 trees</dd>
     </dl>
   </ToolTipContentWrapper>
 )
@@ -82,7 +85,8 @@ export function MapKey() {
       <p>
         Tree Density{' '}
         <Tooltip title={tooltipContent} placement="top" arrow>
-          <InfoRounded fontSize="small" />
+          {/* @ts-ignore */}
+          <InfoRounded fontSize="xsmall" sx={{ color: theme.color.opaqueBlack[56] }} />
         </Tooltip>
       </p>
 

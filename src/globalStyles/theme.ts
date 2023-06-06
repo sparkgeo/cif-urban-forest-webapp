@@ -12,6 +12,8 @@ const color = {
     50: '#fafafa',
   },
   text: { primary: '#000000DE', secondary: '#00000099' },
+  tooltipBackground: '#424242',
+  opaqueBlack: { 56: '#0000008F' },
 }
 
 const border = { radius: '4px' }

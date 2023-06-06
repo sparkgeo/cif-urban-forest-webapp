@@ -10,6 +10,7 @@ const TreeMetadataTable = styled('table')`
   width: 350px;
   height: 350px;
   text-align: left;
+  font-family: ${theme.typography.fontStack.join(',')};
   & th {
     padding-right: 0.5em;
     width: 155px;
