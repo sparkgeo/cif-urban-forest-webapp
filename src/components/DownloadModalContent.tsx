@@ -65,6 +65,7 @@ export function DownloadModalContent({
               control={<Radio checked={fileType === 'shp'} />}
               label=".shp"
               onChange={handleFileTypeChange}
+              disabled
             />
             <FormControlLabel
               value="csv"
