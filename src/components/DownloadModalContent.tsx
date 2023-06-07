@@ -42,15 +42,15 @@ export function DownloadModalContent({
 }: DownloadModalContentProps) {
   const filterSelectedContent = (
     <>
-      <DialogTitle sx={{ paddingLeft: 0, paddingRight: 0 }}>
+      <DialogTitle sx={{ paddingLeft: 0, paddingRight: 0, paddingTop: '8px' }}>
         Select file type
         <IconButton
           aria-label="close"
           onClick={closeDownloadModal}
           sx={{
             position: 'absolute',
-            right: 8,
-            top: 8,
+            right: 10,
+            top: 10,
             color: (theme) => theme.palette.grey[500],
           }}
         >
