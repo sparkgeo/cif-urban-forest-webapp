@@ -121,7 +121,7 @@ export function App() {
     const newSearchParameters = new URLSearchParams(window.location.search)
     newSearchParameters.delete(paramName)
     // react router's setSearchParams still works and is used
-    // because it doesnt cacuse the app to refresh like writing
+    // because it doesnt cause the app to refresh like writing
     //  to window.location.search would
     setSearchParameters(newSearchParameters)
     debouncedUpdateTrees()
@@ -136,7 +136,7 @@ export function App() {
     newSearchParameters.delete('min_dbh')
     newSearchParameters.delete('max_dbh')
     // react router's setSearchParams still works and is used
-    // because it doesnt cacuse the app to refresh like writing
+    // because it doesnt cause the app to refresh like writing
     //  to window.location.search would
     setSearchParameters(newSearchParameters)
     debouncedUpdateTrees()
@@ -170,10 +170,10 @@ export function App() {
         : existingSearchParameters.getAll('common_species'),
       min_dbh: newParameters.min_dbh || existingSearchParameters.getAll('min_dbh'),
       max_dbh: newParameters.max_dbh || existingSearchParameters.getAll('max_dbh'),
-      zoom: newParameters.zoom || existingSearchParameters.get('zoom'),
+      zoom: newParameters.zoom || existingSearchParameters.getAll('zoom'), // we use .getAll here because if zoom is null .get will result in zoom=null being set in the app url and being sent to the api (with null as a string)
     } as SharableUrlParameters
     // react router's setSearchParams still works and is used because
-    // it doesnt cacuse the app to refresh like writing
+    // it doesnt cause the app to refresh like writing
     // to window.location.search would
     setSearchParameters(updatedUrlParameters, { replace: true })
 
