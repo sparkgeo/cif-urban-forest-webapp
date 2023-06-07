@@ -7,7 +7,7 @@ import {
   LocationsState,
   Municipalities,
 } from '../types/locationsFilterTypes'
-import { CifList, CifListItem, CifLabel } from './customMuiFormComponents'
+import { CifList, CifListItem, CifLabel, CifLabelIndented } from './customMuiFormComponents'
 import { ColumnFullWidth, RowAlignItemsCenter } from './containers'
 import { ButtonExpandCollapse } from './ButtonExpandCollapse'
 
@@ -72,7 +72,7 @@ export function ProvincesFilter({
                   ]
                 return (
                   <CifListItem key={municipality}>
-                    <CifLabel>{municipality}</CifLabel>
+                    <CifLabelIndented>{municipality}</CifLabelIndented>
                     <Checkbox
                       checked={isMunicipalityChecked}
                       onChange={(event) => {
