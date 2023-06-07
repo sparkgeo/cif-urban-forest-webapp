@@ -213,7 +213,7 @@ export function App() {
         }
         anchorOrigin={{
           vertical: 'top',
-          horizontal: 'right',
+          horizontal: 'center',
         }}
       />
       <Layout sideBar={sideBar} map={map} errorText={errorText} clearErrorText={clearErrorText} />
